@@ -30,7 +30,9 @@ app.use(cors({
     'http://localhost:3000', 
     'http://localhost:5173',
     /\.onrender\.com$/,  // Allow all Render.com subdomains
-    /^https:\/\/.*\.onrender\.com$/
+    /^https:\/\/.*\.onrender\.com$/,
+    /\.netlify\.app$/,  // Allow all Netlify subdomains
+    /^https:\/\/.*\.netlify\.app$/
   ],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],

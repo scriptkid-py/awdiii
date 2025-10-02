@@ -1,0 +1,11 @@
+[build]
+  publish = "dist"
+  command = "npm install && npm run build"
+
+[build.environment]
+  VITE_API_BASE_URL = "https://skillshare-backend.onrender.com/api"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
