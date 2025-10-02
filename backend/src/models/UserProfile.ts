@@ -34,6 +34,11 @@ const userProfileSchema = new Schema<UserProfileDocument>({
     lowercase: true,
     trim: true
   },
+  photoURL: {
+    type: String,
+    trim: true,
+    maxlength: 500
+  },
   bio: { 
     type: String,
     maxlength: 500,
