@@ -270,22 +270,22 @@ const CreateProfile: React.FC<CreateProfileProps> = ({ onProfileComplete, existi
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-2xl mx-auto">
-        <div className="bg-white rounded-2xl shadow-xl p-8">
-          <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">
+    <div className="create-profile-page">
+      <div className="create-profile-container">
+        <div className="create-profile-card">
+          <div className="create-profile-header">
+            <h1 className="create-profile-title">
               {isEditMode ? 'Edit Your Profile' : 'Create Your Profile'}
             </h1>
-            <p className="text-gray-600">
+            <p className="create-profile-subtitle">
               {isEditMode ? 'Update your information and skills!' : 'Tell us about yourself and connect with others!'}
             </p>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form onSubmit={handleSubmit} className="create-profile-form">
             {/* Full Name */}
-            <div>
-              <label htmlFor="displayName" className="block text-sm font-medium text-gray-700 mb-2">
+            <div className="form-group">
+              <label htmlFor="displayName" className="form-label">
                 Full Name *
               </label>
               <input
@@ -294,17 +294,15 @@ const CreateProfile: React.FC<CreateProfileProps> = ({ onProfileComplete, existi
                 name="displayName"
                 value={formData.displayName}
                 onChange={handleInputChange}
-                className={`w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-colors ${
-                  errors.displayName ? 'border-red-500' : 'border-gray-300'
-                }`}
+                className={`form-input ${errors.displayName ? 'form-input--error' : ''}`}
                 placeholder="Enter your full name"
               />
-              {errors.displayName && <p className="mt-1 text-sm text-red-600">{errors.displayName}</p>}
+              {errors.displayName && <p className="form-error">{errors.displayName}</p>}
             </div>
 
             {/* University */}
-            <div>
-              <label htmlFor="university" className="block text-sm font-medium text-gray-700 mb-2">
+            <div className="form-group">
+              <label htmlFor="university" className="form-label">
                 University *
               </label>
               <input
@@ -313,38 +311,35 @@ const CreateProfile: React.FC<CreateProfileProps> = ({ onProfileComplete, existi
                 name="university"
                 value={formData.university}
                 onChange={handleInputChange}
-                className={`w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-colors ${
-                  errors.university ? 'border-red-500' : 'border-gray-300'
-                }`}
+                className={`form-input ${errors.university ? 'form-input--error' : ''}`}
                 placeholder="e.g., Stanford University"
               />
-              {errors.university && <p className="mt-1 text-sm text-red-600">{errors.university}</p>}
+              {errors.university && <p className="form-error">{errors.university}</p>}
             </div>
 
             {/* Skills */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Skills * <span className="text-gray-500">(Select all that apply)</span>
+            <div className="form-group">
+              <label className="form-label">
+                Skills * <span className="form-label-note">(Select all that apply)</span>
               </label>
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-3 max-h-64 overflow-y-auto border border-gray-200 rounded-xl p-4">
+              <div className="skills-grid">
                 {skills.map(skill => (
-                  <label key={skill.id} className="flex items-center space-x-2 cursor-pointer">
+                  <label key={skill.id} className="skill-checkbox">
                     <input
                       type="checkbox"
                       checked={formData.selectedSkills.includes(skill.name)}
                       onChange={() => handleSkillToggle(skill.name)}
-                      className="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
                     />
-                    <span className="text-sm text-gray-700">{skill.name}</span>
+                    <span>{skill.name}</span>
                   </label>
                 ))}
               </div>
-              {errors.skills && <p className="mt-1 text-sm text-red-600">{errors.skills}</p>}
+              {errors.skills && <p className="form-error">{errors.skills}</p>}
             </div>
 
             {/* Short Bio */}
-            <div>
-              <label htmlFor="bio" className="block text-sm font-medium text-gray-700 mb-2">
+            <div className="form-group">
+              <label htmlFor="bio" className="form-label">
                 Short Bio
               </label>
               <textarea
@@ -353,18 +348,18 @@ const CreateProfile: React.FC<CreateProfileProps> = ({ onProfileComplete, existi
                 rows={4}
                 value={formData.bio}
                 onChange={handleInputChange}
-                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-colors resize-none"
+                className="form-textarea"
                 placeholder="Tell us about yourself, your interests, and what you're passionate about..."
               />
             </div>
 
             {/* Social Links */}
-            <div className="space-y-4">
-              <h3 className="text-lg font-medium text-gray-900">Social Links</h3>
+            <div className="form-section">
+              <h3 className="form-section-title">Social Links</h3>
               
               {/* Email */}
-              <div>
-                <label htmlFor="contactInfo.email" className="block text-sm font-medium text-gray-700 mb-2">
+              <div className="form-group">
+                <label htmlFor="contactInfo.email" className="form-label">
                   Email
                 </label>
                 <input
@@ -373,14 +368,14 @@ const CreateProfile: React.FC<CreateProfileProps> = ({ onProfileComplete, existi
                   name="contactInfo.email"
                   value={formData.contactInfo.email}
                   onChange={handleInputChange}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-colors"
+                  className="form-input"
                   placeholder="your.email@example.com"
                 />
               </div>
 
               {/* LinkedIn */}
-              <div>
-                <label htmlFor="contactInfo.social.linkedin" className="block text-sm font-medium text-gray-700 mb-2">
+              <div className="form-group">
+                <label htmlFor="contactInfo.social.linkedin" className="form-label">
                   LinkedIn
                 </label>
                 <input
@@ -389,17 +384,15 @@ const CreateProfile: React.FC<CreateProfileProps> = ({ onProfileComplete, existi
                   name="contactInfo.social.linkedin"
                   value={formData.contactInfo.social.linkedin}
                   onChange={handleInputChange}
-                  className={`w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-colors ${
-                    errors.linkedin ? 'border-red-500' : 'border-gray-300'
-                  }`}
+                  className={`form-input ${errors.linkedin ? 'form-input--error' : ''}`}
                   placeholder="https://linkedin.com/in/yourprofile"
                 />
-                {errors.linkedin && <p className="mt-1 text-sm text-red-600">{errors.linkedin}</p>}
+                {errors.linkedin && <p className="form-error">{errors.linkedin}</p>}
               </div>
 
               {/* Instagram */}
-              <div>
-                <label htmlFor="contactInfo.social.instagram" className="block text-sm font-medium text-gray-700 mb-2">
+              <div className="form-group">
+                <label htmlFor="contactInfo.social.instagram" className="form-label">
                   Instagram
                 </label>
                 <input
@@ -408,54 +401,51 @@ const CreateProfile: React.FC<CreateProfileProps> = ({ onProfileComplete, existi
                   name="contactInfo.social.instagram"
                   value={formData.contactInfo.social.instagram}
                   onChange={handleInputChange}
-                  className={`w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-colors ${
-                    errors.instagram ? 'border-red-500' : 'border-gray-300'
-                  }`}
+                  className={`form-input ${errors.instagram ? 'form-input--error' : ''}`}
                   placeholder="https://instagram.com/yourusername"
                 />
-                {errors.instagram && <p className="mt-1 text-sm text-red-600">{errors.instagram}</p>}
+                {errors.instagram && <p className="form-error">{errors.instagram}</p>}
               </div>
             </div>
 
             {/* Availability */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Availability <span className="text-gray-500">(Check all that apply)</span>
+            <div className="form-group">
+              <label className="form-label">
+                Availability <span className="form-label-note">(Check all that apply)</span>
               </label>
-              <div className="space-y-2">
+              <div className="availability-options">
                 {[
                   { value: 'projects', label: 'Open for projects' },
                   { value: 'tutoring', label: 'Available for tutoring' },
                   { value: 'both', label: 'Both projects and tutoring' }
                 ].map(option => (
-                  <label key={option.value} className="flex items-center space-x-3 cursor-pointer">
+                  <label key={option.value} className="availability-checkbox">
                     <input
                       type="checkbox"
                       checked={formData.availability.includes(option.value)}
                       onChange={() => handleAvailabilityToggle(option.value)}
-                      className="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
                     />
-                    <span className="text-sm text-gray-700">{option.label}</span>
+                    <span>{option.label}</span>
                   </label>
                 ))}
               </div>
             </div>
 
             {/* Submit Button */}
-            <div className="pt-6">
+            <div className="form-submit">
               {errors.submit && (
-                <p className="mb-4 text-sm text-red-600 text-center">{errors.submit}</p>
+                <p className="form-error form-error--center">{errors.submit}</p>
               )}
               <button
                 type="submit"
                 disabled={saving}
-                className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold py-4 px-6 rounded-xl hover:from-indigo-700 hover:to-purple-700 focus:ring-4 focus:ring-indigo-300 transition-all duration-200 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                className="btn btn--primary btn--large"
               >
                 {saving ? (
-                  <div className="flex items-center justify-center">
-                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
+                  <>
+                    <span className="btn-spinner"></span>
                     {isEditMode ? 'Updating Profile...' : 'Creating Profile...'}
-                  </div>
+                  </>
                 ) : (
                   isEditMode ? 'Update Profile' : 'Create Profile'
                 )}
