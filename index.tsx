@@ -31,21 +31,23 @@ const Navigation: React.FC<{ userProfile: UserProfile | null }> = ({ userProfile
       <nav className="header__nav">
         {user && (
           <>
-            <button onClick={() => navigate('/')}>
+            <button onClick={() => navigate('/')} className="nav-link">
               Browse
             </button>
-            {userProfile ? (
-              <button onClick={() => navigate('/add-profile')}>
-                My Profile
-              </button>
-            ) : (
-              <button 
-                onClick={handleAddProfile}
-                className="header__cta"
-              >
-                Add Your Profile
-              </button>
-            )}
+            <button 
+              onClick={handleAddProfile}
+              className="nav-link"
+            >
+              Add Your Profile
+            </button>
+            <div className="user-info">
+              <img 
+                src={user.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.displayName || 'User')}&background=6366f1&color=fff&size=32`}
+                alt={user.displayName || 'User'}
+                className="user-avatar"
+              />
+              <span className="user-name">{user.displayName || 'User'}</span>
+            </div>
           </>
         )}
         <Login />

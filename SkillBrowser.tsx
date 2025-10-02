@@ -82,130 +82,98 @@ const SkillBrowser: React.FC<SkillBrowserProps> = ({ onProfileClick }) => {
 
   return (
     <div className="skill-browser">
-      <div className="browse-page">
-        <div className="browse-page__filters">
-          <h2>Find People</h2>
-          
-          <div className="browse-page__filter-group">
-            <h3>Search</h3>
+      <div className="browse-layout">
+        {/* Left Sidebar */}
+        <aside className="browse-sidebar">
+          <div className="search-section">
+            <h3 className="sidebar-title">Search</h3>
             <input
               type="text"
-              placeholder="Search by name, skills, or bio..."
+              placeholder="Search by name..."
               value={filters.searchTerm || ''}
               onChange={handleSearchChange}
+              className="search-input"
             />
           </div>
 
-          <div className="browse-page__filter-group">
-            <h3>Skills</h3>
-            {skills.map(skill => (
-              <label key={skill.id}>
+          <div className="filter-section">
+            <h3 className="sidebar-title">Filter by Skill</h3>
+            <div className="filter-options">
+              {['Design', 'Coding', 'Photography', 'Writing', 'Public Speaking', 'Video Editing'].map(skill => (
+                <label key={skill} className="filter-checkbox">
+                  <input
+                    type="checkbox"
+                    checked={filters.skills.includes(skill)}
+                    onChange={() => handleFilterChange('skills', skill)}
+                  />
+                  <span className="checkmark"></span>
+                  {skill}
+                </label>
+              ))}
+            </div>
+          </div>
+
+          <div className="filter-section">
+            <h3 className="sidebar-title">Availability</h3>
+            <div className="filter-options">
+              <label className="filter-checkbox">
                 <input
                   type="checkbox"
-                  checked={filters.skills.includes(skill.name)}
-                  onChange={() => handleFilterChange('skills', skill.name)}
+                  checked={filters.availability.includes('projects')}
+                  onChange={() => handleFilterChange('availability', 'projects')}
                 />
-                {skill.name}
+                <span className="checkmark"></span>
+                Open for projects
               </label>
-            ))}
-          </div>
-
-          <div className="browse-page__filter-group">
-            <h3>Categories</h3>
-            {categories.map(category => (
-              <label key={category.id}>
+              <label className="filter-checkbox">
                 <input
                   type="checkbox"
-                  checked={filters.categories.includes(category.name)}
-                  onChange={() => handleFilterChange('categories', category.name)}
+                  checked={filters.availability.includes('tutoring')}
+                  onChange={() => handleFilterChange('availability', 'tutoring')}
                 />
-                {category.name}
+                <span className="checkmark"></span>
+                Available for tutoring
               </label>
-            ))}
+            </div>
           </div>
+        </aside>
 
-          <div className="browse-page__filter-group">
-            <h3>Availability</h3>
-            <label>
-              <input
-                type="checkbox"
-                checked={filters.availability.includes('projects')}
-                onChange={() => handleFilterChange('availability', 'projects')}
-              />
-              Open for projects
-            </label>
-            <label>
-              <input
-                type="checkbox"
-                checked={filters.availability.includes('tutoring')}
-                onChange={() => handleFilterChange('availability', 'tutoring')}
-              />
-              Available for tutoring
-            </label>
-            <label>
-              <input
-                type="checkbox"
-                checked={filters.availability.includes('both')}
-                onChange={() => handleFilterChange('availability', 'both')}
-              />
-              Both projects and tutoring
-            </label>
-          </div>
-
-          <button onClick={clearFilters} className="button button--secondary">
-            Clear Filters
-          </button>
-        </div>
-
-        <div className="browse-page__results">
-          <h2>People ({profiles.length})</h2>
-          
+        {/* Main Content */}
+        <main className="browse-main">
           {profiles.length === 0 ? (
-            <div style={{ textAlign: 'center', padding: '2rem' }}>
+            <div className="no-results">
               <p>No profiles found matching your criteria.</p>
-              <button onClick={clearFilters} className="button">
+              <button onClick={clearFilters} className="clear-filters-btn">
                 Clear Filters
               </button>
             </div>
           ) : (
-            <div className="browse-page__results-grid">
+            <div className="profiles-grid">
               {profiles.map(profile => (
                 <div 
                   key={profile.id} 
                   className="profile-card"
                   onClick={() => onProfileClick(profile)}
                 >
-                  <img 
-                    src={profile.photoURL || '/default-avatar.png'} 
-                    alt={profile.displayName}
-                    className="profile-card__image"
-                  />
-                  <h3 className="profile-card__name">{profile.displayName}</h3>
-                  {profile.major && (
-                    <p className="profile-card__major">{profile.major}</p>
-                  )}
-                  {profile.university && (
-                    <p className="profile-card__university">{profile.university}</p>
-                  )}
-                  {profile.bio && (
-                    <p className="profile-card__bio">{profile.bio.substring(0, 100)}...</p>
-                  )}
-                  <div className="profile-card__skills">
-                    {profile.skills.slice(0, 3).map(skill => (
-                      <span key={skill} className="skill-tag">{skill}</span>
-                    ))}
-                    {profile.skills.length > 3 && (
-                      <span className="skill-tag">+{profile.skills.length - 3} more</span>
-                    )}
+                  <div className="profile-avatar">
+                    <img 
+                      src={profile.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(profile.displayName)}&background=6366f1&color=fff&size=120`} 
+                      alt={profile.displayName}
+                      className="avatar-image"
+                    />
                   </div>
-                  <div className={`profile-card__availability profile-card__availability--${profile.availability}`}>
-                    {profile.availability}
+                  <h3 className="profile-name">{profile.displayName}</h3>
+                  <p className="profile-field">{profile.university || 'University'}</p>
+                  <div className="profile-skills">
+                    {profile.skills.slice(0, 4).map(skill => (
+                      <span key={skill} className="skill-badge">{skill}</span>
+                    ))}
                   </div>
                 </div>
               ))}
             </div>
           )}
-        </div>
+        </main>
       </div>
     </div>
   );
