@@ -43,8 +43,8 @@ export const getGravatarUrl = (email: string, size: number = 200): string => {
   // Create MD5-like hash for better Gravatar compatibility
   const hash = md5Like(normalizedEmail);
   
-  // Try to get real Gravatar first, fallback to robohash for more interesting avatars
-  return `https://www.gravatar.com/avatar/${hash}?s=${size}&d=robohash`;
+  // First try to get real Gravatar photo, if none exists use retro style
+  return `https://www.gravatar.com/avatar/${hash}?s=${size}&d=retro&r=g`;
 };
 
 /**
