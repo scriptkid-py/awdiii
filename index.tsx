@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom/client';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router } from 'react-router-dom';
 import { AuthProvider, useAuth } from './AuthContext';
 import Login from './Login';
-import ProtectedRoute from './ProtectedRoute';
 import ProfileManager from './ProfileManager';
 import SkillBrowser from './SkillBrowser';
 import ProfileView from './ProfileView';
+import MongoDBTest from './MongoDBTest';
 import { UserProfile } from './types';
-import { getUserProfile } from './database';
+import { getUserProfile } from './database-mongodb';
 
 // Main App component with routing
 const App: React.FC = () => {
@@ -84,6 +84,7 @@ const App: React.FC = () => {
       </header>
 
       <main>
+        <MongoDBTest />
         {!user ? (
           <div className="login-page">
             <h2>Welcome to SkillShare</h2>
