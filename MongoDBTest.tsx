@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { connectToDatabase, getCollections } from './mongodb';
+import { apiClient } from './api-client';
+import { logger, createUserErrorMessage } from './logger';
 
 const MongoDBTest: React.FC = () => {
   const [connectionStatus, setConnectionStatus] = useState<string>('Not tested');
@@ -7,66 +8,63 @@ const MongoDBTest: React.FC = () => {
 
   const testConnection = async () => {
     setIsLoading(true);
-    setConnectionStatus('Testing connection to MongoDB Atlas...');
+    setConnectionStatus('Testing database access...');
     
     try {
-      const connected = await connectToDatabase();
+      // Test backend API connection and data access
+      const healthResponse = await apiClient.healthCheck();
       
-      if (connected) {
-        const collections = getCollections();
-        
-        // Test if we can access collections
-        const profileCount = await collections.profiles.countDocuments();
-        const skillCount = await collections.skills.countDocuments();
-        
-        setConnectionStatus(`✅ Connected to MongoDB Atlas! Profiles: ${profileCount}, Skills: ${skillCount}`);
+      if (healthResponse.success && healthResponse.data) {
+        const { skills, categories } = healthResponse.data;
+        setConnectionStatus(`✅ Backend API working! Skills: ${skills}, Categories: ${categories}`);
       } else {
-        setConnectionStatus('❌ Connection failed - check your credentials and network access');
+        throw new Error(healthResponse.error || 'Health check failed');
       }
     } catch (error) {
-      console.error('MongoDB connection error:', error);
-      setConnectionStatus(`❌ Connection failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      // Log the full error with structured logging
+      const errorCode = logger.error(
+        'Database access test failed',
+        error instanceof Error ? error : new Error(String(error)),
+        {
+          operation: 'database_access_test',
+          timestamp: new Date().toISOString(),
+          userAgent: navigator.userAgent
+        }
+      );
+      
+      // Show sanitized user-facing message
+      setConnectionStatus(createUserErrorMessage('Backend API Access', errorCode));
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <div style={{ 
-      padding: '2rem', 
-      border: '1px solid #ccc', 
-      borderRadius: '8px', 
-      margin: '1rem',
-      backgroundColor: '#f9f9f9'
-    }}>
-      <h3>MongoDB Atlas Connection Test</h3>
+    <div className="test-container">
+      <h3>Backend API Access Test</h3>
       <p><strong>Status:</strong> {connectionStatus}</p>
       <button 
         onClick={testConnection} 
         disabled={isLoading}
-        style={{
-          padding: '0.5rem 1rem',
-          backgroundColor: '#007bff',
-          color: 'white',
-          border: 'none',
-          borderRadius: '4px',
-          cursor: isLoading ? 'not-allowed' : 'pointer'
-        }}
+        aria-label="Test MongoDB connection"
+        aria-busy={isLoading}
+        aria-disabled={isLoading}
+        className="test-button"
       >
-        {isLoading ? 'Testing...' : 'Test Connection'}
+        {isLoading ? 'Testing...' : 'Test Backend API Access'}
       </button>
       
-      <div style={{ marginTop: '1rem', fontSize: '0.9rem', color: '#666' }}>
-        <p><strong>✅ Setup Complete!</strong></p>
+      <div className="test-info-section">
+        <p><strong>✅ Backend API Setup Complete!</strong></p>
         <ul>
-          <li>✅ MongoDB Atlas connection configured</li>
-          <li>✅ Environment variables set</li>
-          <li>✅ Database: skillshare</li>
-          <li>✅ User: r44chr_db_user</li>
-          <li>✅ Cluster: skillshire.mongodb.net</li>
+          <li>✅ Backend API server configured</li>
+          <li>✅ Database operations moved to backend</li>
+          <li>✅ Secure API endpoints available</li>
+          <li>✅ Authentication middleware ready</li>
+          <li>✅ Data validation implemented</li>
         </ul>
-        <p style={{ marginTop: '1rem', color: '#28a745' }}>
-          <strong>Ready to use!</strong> Your MongoDB Atlas connection is configured and ready for testing.
+        <p className="test-success-message">
+          <strong>Ready to use!</strong> Your backend API is configured and ready for testing.
         </p>
       </div>
     </div>

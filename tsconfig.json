@@ -9,8 +9,9 @@
       "DOM.Iterable"
     ],
     "skipLibCheck": true,
+    // Only include React types for browser environment
+    // Excludes Node.js types to prevent server-side globals in client code
     "types": [
-      "node",
       "react",
       "react-dom"
     ],

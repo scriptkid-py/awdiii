@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { UserProfile, Skill, SkillCategory, SearchFilters } from './types';
-import { searchProfiles, getAllSkills, getSkillCategories } from './database-mongodb';
+import { searchProfiles, getAllSkills, getSkillCategories } from './database-api';
 
 interface SkillBrowserProps {
   onProfileClick: (profile: UserProfile) => void;

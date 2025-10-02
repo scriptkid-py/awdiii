@@ -17,7 +17,10 @@
 2. Click "Add New Database User"
 3. Choose "Password" authentication
 4. Create a username and password
-5. Set privileges to "Read and write to any database"
+5. Set privileges to "Read and write to a specific database: skillshare"
+   - Select "Built-in Role" and choose "readWrite"
+   - Specify the database name as "skillshare"
+   - Avoid assigning cluster-wide roles (like "Atlas admin") or admin roles unless explicitly needed
 6. Click "Add User"
 
 ## 4. Set Up Network Access
@@ -46,6 +49,13 @@ Replace:
 - `your-password` with your database password
 - `your-cluster` with your cluster name
 
+**Important:** If your password contains special characters (like `@`, `#`, `%`, etc.), you must URL-encode them in the connection string. For example:
+- `@` becomes `%40`
+- `#` becomes `%23`
+- `%` becomes `%25`
+
+Alternatively, you can omit credentials from the connection string and authenticate via MongoDB driver options. For a complete list of characters that need encoding, see [URL encoding reference](https://www.w3schools.com/tags/ref_urlencode.ASP).
+
 ## 7. Install Dependencies
 ```bash
 npm install mongodb mongoose
@@ -58,7 +68,7 @@ Replace the import in your components:
 import { getUserProfile } from './database';
 
 // To:
-import { getUserProfile } from './database-mongodb';
+import { getUserProfile } from './database-api';
 ```
 
 ## 9. Test Connection

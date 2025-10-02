@@ -8,7 +8,7 @@ import {
   getAllSkills, 
   getSkillCategories,
   initializeDefaultData 
-} from './database-mongodb';
+} from './database-api';
 
 interface ProfileManagerProps {
   onProfileComplete: (profile: UserProfile) => void;
