@@ -1,8 +1,30 @@
 import mongoose, { Schema, Document } from 'mongoose';
-import { UserProfile as IUserProfile } from '../types.js';
 
-export interface UserProfileDocument extends Omit<IUserProfile, 'id'>, Document {
+// Define the document shape explicitly to avoid TypeScript inference issues
+export interface UserProfileDocument extends Document {
   _id: mongoose.Types.ObjectId;
+  uid: string;
+  displayName: string;
+  email: string;
+  photoURL?: string;
+  bio?: string;
+  skills: string[];
+  interests?: string[];
+  availability: string[];
+  university?: string;
+  year?: string;
+  contactInfo?: {
+    email?: string;
+    phone?: string;
+    social?: {
+      linkedin?: string;
+      github?: string;
+      twitter?: string;
+      instagram?: string;
+    }
+  };
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 const contactInfoSchema = new Schema({
@@ -32,6 +54,10 @@ const userProfileSchema = new Schema<UserProfileDocument>({
     type: String, 
     required: true,
     lowercase: true,
+    trim: true
+  },
+  photoURL: { 
+    type: String,
     trim: true
   },
   bio: { 
