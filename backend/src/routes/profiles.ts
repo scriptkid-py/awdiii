@@ -67,14 +67,14 @@ router.post('/', authenticateToken, validateCreateProfile, async (req: Authentic
     const profile = new UserProfile(profileData);
     await profile.save();
 
-    res.status(201).json({
+    return res.status(201).json({
       success: true,
       data: profile,
       message: 'Profile created successfully'
     } as ApiResponse);
   } catch (error) {
     console.error('Error creating profile:', error);
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       error: 'Internal server error'
     } as ApiResponse);
@@ -115,14 +115,14 @@ router.put('/:id', authenticateToken, validateUpdateProfile, async (req: Authent
       { new: true, runValidators: true }
     );
 
-    res.json({
+    return res.json({
       success: true,
       data: updatedProfile,
       message: 'Profile updated successfully'
     } as ApiResponse);
   } catch (error) {
     console.error('Error updating profile:', error);
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       error: 'Internal server error'
     } as ApiResponse);
@@ -145,7 +145,7 @@ router.get('/', optionalAuth, async (req: AuthenticatedRequest, res) => {
     const total = await UserProfile.countDocuments({});
     const totalPages = Math.ceil(total / limit);
 
-    res.json({
+    return res.json({
       success: true,
       data: profiles,
       pagination: {
@@ -157,7 +157,7 @@ router.get('/', optionalAuth, async (req: AuthenticatedRequest, res) => {
     } as PaginatedResponse);
   } catch (error) {
     console.error('Error fetching profiles:', error);
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       error: 'Internal server error'
     } as ApiResponse);
@@ -235,7 +235,7 @@ router.get('/search', optionalAuth, validateSearch, async (req: AuthenticatedReq
     const total = await UserProfile.countDocuments(query);
     const totalPages = Math.ceil(total / limit);
 
-    res.json({
+    return res.json({
       success: true,
       data: profiles,
       pagination: {
@@ -247,7 +247,7 @@ router.get('/search', optionalAuth, validateSearch, async (req: AuthenticatedReq
     } as PaginatedResponse);
   } catch (error) {
     console.error('Error searching profiles:', error);
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       error: 'Internal server error'
     } as ApiResponse);
@@ -275,13 +275,13 @@ router.get('/:id', validateMongoId, async (req: express.Request, res: Response) 
       } as ApiResponse);
     }
 
-    res.json({
+    return res.json({
       success: true,
       data: profile
     } as ApiResponse);
   } catch (error) {
     console.error('Error fetching profile:', error);
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       error: 'Internal server error'
     } as ApiResponse);

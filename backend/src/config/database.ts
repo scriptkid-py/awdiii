@@ -3,12 +3,10 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-const MONGODB_URI = process.env.MONGODB_URI;
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/skillshare';
 const MONGODB_DB = process.env.MONGODB_DB || 'skillshare';
 
-if (!MONGODB_URI) {
-  throw new Error('MONGODB_URI environment variable is required');
-}
+console.log('📝 MongoDB URI:', MONGODB_URI.replace(/\/\/.*@/, '//***:***@')); // Hide credentials in logs
 
 export const connectToDatabase = async (): Promise<void> => {
   try {
@@ -25,7 +23,12 @@ export const connectToDatabase = async (): Promise<void> => {
     console.log(`📊 Database: ${MONGODB_DB}`);
   } catch (error) {
     console.error('❌ Failed to connect to MongoDB:', error);
-    process.exit(1);
+    console.log('⚠️  Server will continue without database connection for development');
+    console.log('⚠️  Some features may not work properly');
+    // Don't exit in development - allow server to start for testing
+    if (process.env.NODE_ENV === 'production') {
+      process.exit(1);
+    }
   }
 };
 

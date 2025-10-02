@@ -216,7 +216,24 @@ const CreateProfile: React.FC<CreateProfileProps> = ({ onProfileComplete, existi
       
     } catch (error) {
       console.error(`Error ${isEditMode ? 'updating' : 'creating'} profile:`, error);
-      setErrors({ submit: `Failed to ${isEditMode ? 'update' : 'create'} profile. Please try again.` });
+      
+      let errorMessage = `Failed to ${isEditMode ? 'update' : 'create'} profile. Please try again.`;
+      
+      if (error instanceof Error) {
+        if (error.message.includes('fetch')) {
+          errorMessage = 'Unable to connect to the server. Please check your internet connection and try again.';
+        } else if (error.message.includes('401') || error.message.includes('unauthorized')) {
+          errorMessage = 'Authentication failed. Please log out and log back in.';
+        } else if (error.message.includes('409') || error.message.includes('already exists')) {
+          errorMessage = 'A profile already exists for this user. Try refreshing the page.';
+        } else if (error.message.includes('400') || error.message.includes('validation')) {
+          errorMessage = 'Invalid profile data. Please check all required fields.';
+        } else if (error.message.includes('500')) {
+          errorMessage = 'Server error. Please try again in a few moments.';
+        }
+      }
+      
+      setErrors({ submit: errorMessage });
     } finally {
       setSaving(false);
     }

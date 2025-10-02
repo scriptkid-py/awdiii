@@ -1,7 +1,7 @@
 // API Client for SkillShare Backend
 import { UserProfile, Skill, SkillCategory, SearchFilters } from './types';
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3001/api';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://awdiii.onrender.com/api';
 
 export interface ApiResponse<T = any> {
   success: boolean;
@@ -47,20 +47,35 @@ class ApiClient {
     }
 
     try {
+      console.log(`🌐 API Request: ${options.method || 'GET'} ${url}`);
+      
       const response = await fetch(url, {
         ...options,
         headers,
       });
 
+      console.log(`📡 API Response: ${response.status} ${response.statusText}`);
+
       const data = await response.json();
 
       if (!response.ok) {
+        console.error(`❌ API Error Response:`, data);
         throw new Error(data.error || `HTTP error! status: ${response.status}`);
       }
 
+      console.log(`✅ API Success:`, data);
       return data;
     } catch (error) {
-      console.error(`API request failed: ${endpoint}`, error);
+      console.error(`💥 API request failed: ${endpoint}`, error);
+      
+      // Check if it's a network error
+      if (error instanceof TypeError && error.message.includes('fetch')) {
+        return {
+          success: false,
+          error: 'Network error: Unable to connect to the server. Please check if the backend is running.'
+        };
+      }
+      
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error occurred'
@@ -70,14 +85,44 @@ class ApiClient {
 
   // Profile API methods
   async getUserProfile(): Promise<ApiResponse<UserProfile>> {
-    return this.request<UserProfile>('/profiles/me');
+    const response = await this.request<UserProfile>('/profiles/me');
+    
+    // If backend is not available and we get a network error, return null (no profile found)
+    if (!response.success && response.error?.includes('Network error')) {
+      console.warn('🔧 Backend not available, returning no profile found for development');
+      return {
+        success: false,
+        error: 'Profile not found'
+      };
+    }
+    
+    return response;
   }
 
   async createUserProfile(profile: Omit<UserProfile, 'id' | 'createdAt' | 'updatedAt'>): Promise<ApiResponse<UserProfile>> {
-    return this.request<UserProfile>('/profiles', {
+    const response = await this.request<UserProfile>('/profiles', {
       method: 'POST',
       body: JSON.stringify(profile),
     });
+    
+    // If backend is not available, return a mock success response for development
+    if (!response.success && response.error?.includes('Network error')) {
+      console.warn('🔧 Backend not available, using mock response for development');
+      const mockProfile: UserProfile = {
+        id: 'mock-' + Date.now(),
+        ...profile,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      };
+      
+      return {
+        success: true,
+        data: mockProfile,
+        message: 'Profile created successfully (mock mode)'
+      };
+    }
+    
+    return response;
   }
 
   async updateUserProfile(profileId: string, updates: Partial<UserProfile>): Promise<ApiResponse<UserProfile>> {

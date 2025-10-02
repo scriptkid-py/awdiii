@@ -72,14 +72,14 @@ router.post('/', authenticateToken, validateCreateSkillCategory, async (req: exp
     const category = new SkillCategory(req.body);
     await category.save();
 
-    res.status(201).json({
+    return res.status(201).json({
       success: true,
       data: category,
       message: 'Skill category created successfully'
     } as ApiResponse);
   } catch (error) {
     console.error('Error creating skill category:', error);
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       error: 'Internal server error'
     } as ApiResponse);
@@ -105,13 +105,13 @@ router.get('/:id', validateMongoId, async (req: express.Request, res: Response) 
       } as ApiResponse);
     }
 
-    res.json({
+    return res.json({
       success: true,
       data: category
     } as ApiResponse);
   } catch (error) {
     console.error('Error fetching skill category:', error);
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       error: 'Internal server error'
     } as ApiResponse);

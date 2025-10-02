@@ -24,16 +24,24 @@ app.use(helmet({
 }));
 
 // CORS configuration
+const corsOrigins: (string | RegExp)[] = [
+  // Production domains - HTTPS only for security
+  /^https:\/\/.*\.onrender\.com$/,  // Render.com subdomains (HTTPS only)
+  /^https:\/\/.*\.netlify\.app$/,   // Netlify subdomains (HTTPS only)
+];
+
+// Add development origins if in development mode
+// WARNING: HTTP is only allowed in development for local testing
+if (process.env.NODE_ENV !== 'production') {
+  corsOrigins.push(
+    FRONTEND_URL,  // Usually http://localhost:5173 in dev
+    'http://localhost:3000',
+    'http://localhost:5173'
+  );
+}
+
 app.use(cors({
-  origin: [
-    FRONTEND_URL, 
-    'http://localhost:3000', 
-    'http://localhost:5173',
-    /\.onrender\.com$/,  // Allow all Render.com subdomains
-    /^https:\/\/.*\.onrender\.com$/,
-    /\.netlify\.app$/,  // Allow all Netlify subdomains
-    /^https:\/\/.*\.netlify\.app$/
-  ],
+  origin: corsOrigins,
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']

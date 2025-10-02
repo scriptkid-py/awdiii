@@ -1,9 +1,9 @@
 [build]
   publish = "dist"
-  command = "npm install && npm run build"
+  command = "npm run build"
 
 [build.environment]
-  VITE_API_BASE_URL = "https://skillshare-backend.onrender.com/api"
+  VITE_API_BASE_URL = "https://awdiii.onrender.com/api"
 
 [[redirects]]
   from = "/*"

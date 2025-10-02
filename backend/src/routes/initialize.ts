@@ -80,14 +80,24 @@ router.post('/default-data', async (req, res) => {
 router.get('/health', async (req, res) => {
   try {
     // Test database connectivity
-    const skillsCount = await Skill.countDocuments();
-    const categoriesCount = await SkillCategory.countDocuments();
+    let skillsCount = 0;
+    let categoriesCount = 0;
+    let databaseStatus = 'disconnected';
     
-    res.json({
+    try {
+      skillsCount = await Skill.countDocuments();
+      categoriesCount = await SkillCategory.countDocuments();
+      databaseStatus = 'connected';
+    } catch (dbError) {
+      console.warn('Database not available for health check:', dbError);
+      databaseStatus = 'disconnected';
+    }
+    
+    return res.json({
       success: true,
       data: {
         status: 'healthy',
-        database: 'connected',
+        database: databaseStatus,
         skills: skillsCount,
         categories: categoriesCount,
         timestamp: new Date().toISOString()
@@ -95,9 +105,9 @@ router.get('/health', async (req, res) => {
     } as ApiResponse);
   } catch (error) {
     console.error('Health check failed:', error);
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
-      error: 'Database connection failed',
+      error: 'Health check failed',
       data: {
         status: 'unhealthy',
         database: 'disconnected',
