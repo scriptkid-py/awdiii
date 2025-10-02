@@ -5,6 +5,7 @@ import { AuthProvider, useAuth } from './AuthContext';
   // No longer need MongoDB context - using backend API
 import Login from './Login';
 import ProfileManager from './ProfileManager';
+import CreateProfile from './CreateProfile';
 import SkillBrowser from './SkillBrowser';
 import ProfileView from './ProfileView';
 import { UserProfile } from './types';
@@ -17,6 +18,7 @@ const App: React.FC = () => {
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [selectedProfile, setSelectedProfile] = useState<UserProfile | null>(null);
   const [showProfileManager, setShowProfileManager] = useState(false);
+  const [showCreateProfile, setShowCreateProfile] = useState(false);
 
   useEffect(() => {
     const loadUserProfile = async () => {
@@ -24,7 +26,8 @@ const App: React.FC = () => {
         try {
           const profile = await getUserProfile(user.uid);
           setUserProfile(profile);
-          setShowProfileManager(!profile);
+          setShowCreateProfile(!profile);
+          setShowProfileManager(false);
         } catch (error) {
           console.error('Error loading user profile:', error);
         }
@@ -32,6 +35,7 @@ const App: React.FC = () => {
         setUserProfile(null);
         setSelectedProfile(null);
         setShowProfileManager(false);
+        setShowCreateProfile(false);
       }
     };
 
@@ -41,6 +45,7 @@ const App: React.FC = () => {
   const handleProfileComplete = (profile: UserProfile) => {
     setUserProfile(profile);
     setShowProfileManager(false);
+    setShowCreateProfile(false);
   };
 
   const handleProfileClick = (profile: UserProfile) => {
@@ -53,6 +58,7 @@ const App: React.FC = () => {
 
   const handleEditProfile = () => {
     setShowProfileManager(true);
+    setShowCreateProfile(false);
   };
 
   if (loading) {
@@ -91,6 +97,8 @@ const App: React.FC = () => {
             <p>Connect with people who share your skills and interests</p>
             <Login />
           </div>
+        ) : showCreateProfile ? (
+          <CreateProfile onProfileComplete={handleProfileComplete} />
         ) : showProfileManager ? (
           <ProfileManager onProfileComplete={handleProfileComplete} />
         ) : selectedProfile ? (

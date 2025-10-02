@@ -35,7 +35,23 @@ export const validateCreateProfile: ValidationChain[] = [
   body('year')
     .optional()
     .isString()
-    .withMessage('Year must be a string')
+    .withMessage('Year must be a string'),
+  body('contactInfo.email')
+    .optional()
+    .isEmail()
+    .withMessage('Contact email must be valid'),
+  body('contactInfo.phone')
+    .optional()
+    .isString()
+    .withMessage('Phone must be a string'),
+  body('contactInfo.social.linkedin')
+    .optional()
+    .isURL()
+    .withMessage('LinkedIn URL must be valid'),
+  body('contactInfo.social.instagram')
+    .optional()
+    .isURL()
+    .withMessage('Instagram URL must be valid')
 ];
 
 export const validateUpdateProfile: ValidationChain[] = [
@@ -76,7 +92,23 @@ export const validateUpdateProfile: ValidationChain[] = [
   body('year')
     .optional()
     .isString()
-    .withMessage('Year must be a string')
+    .withMessage('Year must be a string'),
+  body('contactInfo.email')
+    .optional()
+    .isEmail()
+    .withMessage('Contact email must be valid'),
+  body('contactInfo.phone')
+    .optional()
+    .isString()
+    .withMessage('Phone must be a string'),
+  body('contactInfo.social.linkedin')
+    .optional()
+    .isURL()
+    .withMessage('LinkedIn URL must be valid'),
+  body('contactInfo.social.instagram')
+    .optional()
+    .isURL()
+    .withMessage('Instagram URL must be valid')
 ];
 
 // Skill Validation
