@@ -54,22 +54,33 @@ export const getGravatarUrl = (email: string, size: number = 200): string => {
  * @param size - Image size in pixels (default: 200)
  * @returns Profile picture URL
  */
-export const getProfilePictureUrl = (photoURL?: string, email?: string, size: number = 200): string => {
-  // Debug log to see what we're getting
-  console.log('Profile picture params:', { photoURL, email, size });
+/**
+ * Extract profile picture from social media URL
+ * @param socialUrl - Social media profile URL
+ * @param platform - Platform name (linkedin, github, etc.)
+ * @returns Profile picture URL or null
+ */
+export const getSocialMediaProfilePicture = (socialUrl?: string, platform?: string): string | null => {
+  if (!socialUrl || !socialUrl.trim()) return null;
   
-  // Use Firebase photoURL if available and valid
+  // For now, return null - we'd need to implement API calls to get actual social media photos
+  // This could be enhanced later with social media APIs
+  return null;
+};
+
+export const getProfilePictureUrl = (photoURL?: string, email?: string, size: number = 200): string => {
+  // 1. FIRST PRIORITY: Firebase profile picture (from Google login)
   if (photoURL && 
       photoURL.trim() && 
       photoURL !== 'undefined' && 
       photoURL !== 'null' && 
       photoURL.startsWith('http')) {
-    console.log('Using Firebase photoURL:', photoURL);
+    console.log('✅ Using Firebase profile photo:', photoURL);
     return photoURL;
   }
   
-  // Fall back to Gravatar with the user's actual email
+  // 2. FALLBACK: Email-based Gravatar
   const gravatarUrl = getGravatarUrl(email || 'user@example.com', size);
-  console.log('Using Gravatar for email:', email, 'URL:', gravatarUrl);
+  console.log('📧 Using email-based Gravatar for:', email);
   return gravatarUrl;
 };

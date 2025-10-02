@@ -125,11 +125,36 @@ const ProfileView: React.FC<ProfileViewProps> = ({
         )}
 
         <div className="profile-page__section">
-          <h2>Contact</h2>
+          <h2>Contact & Social Media</h2>
           <div className="profile-page__contact">
             <a href={`mailto:${profile.email || 'user@example.com'}`} className="contact-link">
               📧 {profile.email || 'No email provided'}
             </a>
+            
+            {/* Social Media Links */}
+            {profile.contactInfo?.social?.linkedin && (
+              <a href={profile.contactInfo.social.linkedin} target="_blank" rel="noopener noreferrer" className="contact-link">
+                💼 LinkedIn Profile
+              </a>
+            )}
+            
+            {profile.contactInfo?.social?.github && (
+              <a href={profile.contactInfo.social.github} target="_blank" rel="noopener noreferrer" className="contact-link">
+                💻 GitHub Profile
+              </a>
+            )}
+            
+            {profile.contactInfo?.social?.instagram && (
+              <a href={profile.contactInfo.social.instagram} target="_blank" rel="noopener noreferrer" className="contact-link">
+                📸 Instagram Profile
+              </a>
+            )}
+            
+            {profile.contactInfo?.social?.twitter && (
+              <a href={profile.contactInfo.social.twitter} target="_blank" rel="noopener noreferrer" className="contact-link">
+                🐦 Twitter Profile
+              </a>
+            )}
           </div>
         </div>
 
