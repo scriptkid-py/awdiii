@@ -87,6 +87,31 @@ export const getAllProfiles = async (stateManager?: MockStateManager): Promise<U
   }
 };
 
+export const getProfileById = async (
+  profileId: string, 
+  stateManager?: MockStateManager
+): Promise<UserProfile | null> => {
+  try {
+    const response = await apiClient.getProfileById(profileId);
+    if (response.success && response.data) {
+      return response.data;
+    }
+    if (response.error?.includes('not found')) {
+      return null;
+    }
+    throw new Error(response.error || 'Failed to get profile');
+  } catch (error) {
+    if (stateManager) {
+      stateManager.setLastError(error instanceof Error ? error.message : String(error));
+    }
+    // Return null for not found errors to maintain compatibility
+    if (error instanceof Error && error.message.includes('not found')) {
+      return null;
+    }
+    throw error;
+  }
+};
+
 export const searchProfiles = async (
   filters: SearchFilters, 
   stateManager?: MockStateManager

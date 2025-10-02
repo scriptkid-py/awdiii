@@ -129,18 +129,26 @@ const SkillBrowser: React.FC<SkillBrowserProps> = ({ onProfileClick }) => {
             <label>
               <input
                 type="checkbox"
-                checked={filters.availability.includes('available')}
-                onChange={() => handleFilterChange('availability', 'available')}
+                checked={filters.availability.includes('projects')}
+                onChange={() => handleFilterChange('availability', 'projects')}
               />
-              Available
+              Open for projects
             </label>
             <label>
               <input
                 type="checkbox"
-                checked={filters.availability.includes('busy')}
-                onChange={() => handleFilterChange('availability', 'busy')}
+                checked={filters.availability.includes('tutoring')}
+                onChange={() => handleFilterChange('availability', 'tutoring')}
               />
-              Busy
+              Available for tutoring
+            </label>
+            <label>
+              <input
+                type="checkbox"
+                checked={filters.availability.includes('both')}
+                onChange={() => handleFilterChange('availability', 'both')}
+              />
+              Both projects and tutoring
             </label>
           </div>
 

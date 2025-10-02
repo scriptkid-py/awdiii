@@ -1,24 +1,176 @@
 import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom/client';
-import { BrowserRouter as Router } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
 import { AuthProvider, useAuth } from './AuthContext';
   // No longer need MongoDB context - using backend API
 import Login from './Login';
 import CreateProfile from './CreateProfile';
 import SkillBrowser from './SkillBrowser';
 import ProfileView from './ProfileView';
-import ProtectedRoute from './ProtectedRoute';
 import { UserProfile } from './types';
-import { getUserProfile, initializeDefaultData, connectToDatabase } from './database-api';
+import { getUserProfile, getProfileById, initializeDefaultData, connectToDatabase } from './database-api';
+
+// Navigation component
+const Navigation: React.FC<{ userProfile: UserProfile | null }> = ({ userProfile }) => {
+  const { user } = useAuth();
+  const navigate = useNavigate();
+
+  const handleAddProfile = () => {
+    if (!user) {
+      navigate('/login');
+      return;
+    }
+    navigate('/add-profile');
+  };
+
+  return (
+    <header className="header">
+      <div className="header__logo" onClick={() => navigate('/')} style={{ cursor: 'pointer' }}>
+        SkillShare
+      </div>
+      <nav className="header__nav">
+        {user && (
+          <>
+            <button onClick={() => navigate('/')}>
+              Browse
+            </button>
+            {userProfile ? (
+              <button onClick={() => navigate('/add-profile')}>
+                My Profile
+              </button>
+            ) : (
+              <button 
+                onClick={handleAddProfile}
+                className="header__cta"
+              >
+                Add Your Profile
+              </button>
+            )}
+          </>
+        )}
+        <Login />
+      </nav>
+    </header>
+  );
+};
+
+// Login page component
+const LoginPage: React.FC = () => {
+  return (
+    <div className="login-page">
+      <h2>Welcome to SkillShare</h2>
+      <p>Connect with people who share your skills and interests</p>
+      <Login />
+    </div>
+  );
+};
+
+// Browse page component
+const BrowsePage: React.FC = () => {
+  const navigate = useNavigate();
+  
+  const handleProfileClick = (profile: UserProfile) => {
+    navigate(`/profile/${profile.id}`);
+  };
+
+  return <SkillBrowser onProfileClick={handleProfileClick} />;
+};
+
+// Profile view page component
+const ProfilePage: React.FC = () => {
+  const { user } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const profileId = location.pathname.split('/').pop();
+  const [profile, setProfile] = useState<UserProfile | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const loadProfile = async () => {
+      if (!profileId) return;
+      try {
+        const profileData = await getProfileById(profileId);
+        setProfile(profileData);
+      } catch (error) {
+        console.error('Error loading profile:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadProfile();
+  }, [profileId]);
+
+  if (loading) {
+    return <div style={{ textAlign: 'center', padding: '2rem' }}>Loading profile...</div>;
+  }
+
+  if (!profile) {
+    return <div style={{ textAlign: 'center', padding: '2rem' }}>Profile not found</div>;
+  }
+
+  return (
+    <ProfileView 
+      profile={profile}
+      onBack={() => navigate('/')}
+      isOwnProfile={profile.uid === user?.uid}
+      onEdit={profile.uid === user?.uid ? () => navigate('/add-profile') : undefined}
+    />
+  );
+};
+
+// Add Profile page component
+const AddProfilePage: React.FC = () => {
+  const { user } = useAuth();
+  const navigate = useNavigate();
+  const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const loadUserProfile = async () => {
+      if (!user) {
+        navigate('/login');
+        return;
+      }
+      
+      try {
+        const profile = await getUserProfile(user.uid);
+        setUserProfile(profile);
+      } catch (error) {
+        console.error('Error loading user profile:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadUserProfile();
+  }, [user, navigate]);
+
+  const handleProfileComplete = (profile: UserProfile) => {
+    setUserProfile(profile);
+    navigate('/'); // Redirect to browse page
+  };
+
+  if (!user) {
+    return <Navigate to="/login" replace />;
+  }
+
+  if (loading) {
+    return <div style={{ textAlign: 'center', padding: '2rem' }}>Loading...</div>;
+  }
+
+  return (
+    <CreateProfile 
+      onProfileComplete={handleProfileComplete} 
+      existingProfile={userProfile}
+      isEditMode={!!userProfile}
+    />
+  );
+};
 
 // Main App component with routing
 const App: React.FC = () => {
   const { user, loading } = useAuth();
-  // No longer need MongoDB context - using backend API
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
-  const [selectedProfile, setSelectedProfile] = useState<UserProfile | null>(null);
-  const [showProfileManager, setShowProfileManager] = useState(false);
-  const [showCreateProfile, setShowCreateProfile] = useState(false);
 
   useEffect(() => {
     const loadUserProfile = async () => {
@@ -26,49 +178,16 @@ const App: React.FC = () => {
         try {
           const profile = await getUserProfile(user.uid);
           setUserProfile(profile);
-          setShowCreateProfile(!profile);
-          setShowProfileManager(false);
         } catch (error) {
           console.error('Error loading user profile:', error);
         }
       } else {
         setUserProfile(null);
-        setSelectedProfile(null);
-        setShowProfileManager(false);
-        setShowCreateProfile(false);
       }
     };
 
     loadUserProfile();
   }, [user]);
-
-  const handleProfileComplete = (profile: UserProfile) => {
-    setUserProfile(profile);
-    setShowProfileManager(false);
-    setShowCreateProfile(false);
-    // Redirect to browse page after profile creation
-    setSelectedProfile(null);
-  };
-
-  const handleProfileClick = (profile: UserProfile) => {
-    setSelectedProfile(profile);
-  };
-
-  const handleBackToBrowse = () => {
-    setSelectedProfile(null);
-  };
-
-  const handleEditProfile = () => {
-    setShowProfileManager(true);
-    setShowCreateProfile(false);
-  };
-
-  const handleUnauthorizedAccess = () => {
-    // Redirect to login page if user tries to access protected content
-    setShowCreateProfile(false);
-    setShowProfileManager(false);
-    setSelectedProfile(null);
-  };
 
   if (loading) {
     return (
@@ -82,60 +201,15 @@ const App: React.FC = () => {
 
   return (
     <div className="app-container">
-      <header className="header">
-        <div className="header__logo">SkillShare</div>
-        <nav className="header__nav">
-          {user && userProfile && (
-            <>
-              <button onClick={() => setSelectedProfile(null)}>
-                Browse
-              </button>
-              <button onClick={handleEditProfile}>
-                My Profile
-              </button>
-            </>
-          )}
-          {user && !userProfile && (
-            <button 
-              onClick={() => setShowCreateProfile(true)}
-              className="header__cta"
-            >
-              Add Your Profile
-            </button>
-          )}
-          <Login />
-        </nav>
-      </header>
-
+      <Navigation userProfile={userProfile} />
       <main>
-        {!user ? (
-          <div className="login-page">
-            <h2>Welcome to SkillShare</h2>
-            <p>Connect with people who share your skills and interests</p>
-            <Login />
-          </div>
-        ) : showCreateProfile ? (
-          <ProtectedRoute onUnauthorized={handleUnauthorizedAccess}>
-            <CreateProfile onProfileComplete={handleProfileComplete} />
-          </ProtectedRoute>
-        ) : showProfileManager ? (
-          <ProtectedRoute onUnauthorized={handleUnauthorizedAccess}>
-            <CreateProfile 
-              onProfileComplete={handleProfileComplete} 
-              existingProfile={userProfile}
-              isEditMode={true}
-            />
-          </ProtectedRoute>
-        ) : selectedProfile ? (
-          <ProfileView 
-            profile={selectedProfile}
-            onBack={handleBackToBrowse}
-            isOwnProfile={selectedProfile.uid === user.uid}
-            onEdit={selectedProfile.uid === user.uid ? handleEditProfile : undefined}
-          />
-        ) : (
-          <SkillBrowser onProfileClick={handleProfileClick} />
-        )}
+        <Routes>
+          <Route path="/" element={user ? <BrowsePage /> : <LoginPage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/add-profile" element={<AddProfilePage />} />
+          <Route path="/profile/:id" element={<ProfilePage />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
       </main>
     </div>
   );
