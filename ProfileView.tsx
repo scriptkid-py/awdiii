@@ -1,25 +1,62 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { UserProfile } from './types';
+import { deleteUserProfile } from './database-api';
 
 interface ProfileViewProps {
   profile: UserProfile;
   onBack: () => void;
   isOwnProfile?: boolean;
   onEdit?: () => void;
+  onDelete?: () => void;
 }
 
 const ProfileView: React.FC<ProfileViewProps> = ({ 
   profile, 
   onBack, 
   isOwnProfile = false, 
-  onEdit 
+  onEdit,
+  onDelete
 }) => {
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+
+  // Generate Gravatar URL from email
+  const getGravatarUrl = (email: string, size: number = 200) => {
+    // Simple MD5-like hash function for Gravatar (for demo purposes)
+    // In production, you'd want to use a proper MD5 library
+    const hash = email.toLowerCase().trim().split('').reduce((a, b) => {
+      a = ((a << 5) - a) + b.charCodeAt(0);
+      return a & a;
+    }, 0);
+    const hexHash = Math.abs(hash).toString(16).padStart(8, '0');
+    return `https://www.gravatar.com/avatar/${hexHash}?s=${size}&d=identicon`;
+  };
+
+  const handleDeleteProfile = async () => {
+    if (!isOwnProfile || !profile.id) return;
+    
+    try {
+      setIsDeleting(true);
+      await deleteUserProfile(profile.id);
+      setShowDeleteConfirm(false);
+      if (onDelete) {
+        onDelete();
+      } else {
+        onBack();
+      }
+    } catch (error) {
+      console.error('Error deleting profile:', error);
+      alert('Failed to delete profile. Please try again.');
+    } finally {
+      setIsDeleting(false);
+    }
+  };
   return (
     <div className="profile-view">
       <div className="profile-page">
         <div className="profile-page__header">
           <img 
-            src={profile.photoURL || '/default-avatar.png'} 
+            src={profile.photoURL || getGravatarUrl(profile.email)} 
             alt={profile.displayName}
             className="profile-page__image"
           />
@@ -38,10 +75,21 @@ const ProfileView: React.FC<ProfileViewProps> = ({
               {profile.availability}
             </div>
           </div>
-          {isOwnProfile && onEdit && (
-            <button onClick={onEdit} className="button">
-              Edit Profile
-            </button>
+          {isOwnProfile && (
+            <div className="profile-actions-header">
+              {onEdit && (
+                <button onClick={onEdit} className="button">
+                  Edit Profile
+                </button>
+              )}
+              <button 
+                onClick={() => setShowDeleteConfirm(true)} 
+                className="button button--danger"
+                style={{ marginLeft: '0.5rem' }}
+              >
+                Delete Profile
+              </button>
+            </div>
           )}
         </div>
 
@@ -91,6 +139,32 @@ const ProfileView: React.FC<ProfileViewProps> = ({
             </button>
           )}
         </div>
+
+        {/* Delete Confirmation Modal */}
+        {showDeleteConfirm && (
+          <div className="modal-overlay" onClick={() => setShowDeleteConfirm(false)}>
+            <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+              <h3>Delete Profile</h3>
+              <p>Are you sure you want to delete your profile? This action cannot be undone.</p>
+              <div className="modal-actions">
+                <button 
+                  onClick={() => setShowDeleteConfirm(false)} 
+                  className="button button--secondary"
+                  disabled={isDeleting}
+                >
+                  Cancel
+                </button>
+                <button 
+                  onClick={handleDeleteProfile} 
+                  className="button button--danger"
+                  disabled={isDeleting}
+                >
+                  {isDeleting ? 'Deleting...' : 'Delete Profile'}
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

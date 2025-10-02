@@ -254,6 +254,48 @@ router.get('/search', optionalAuth, validateSearch, async (req: AuthenticatedReq
   }
 });
 
+// Delete user profile
+router.delete('/:id', authenticateToken, validateMongoId, async (req: AuthenticatedRequest, res: Response) => {
+  try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({
+        success: false,
+        error: 'Invalid profile ID'
+      } as ApiResponse);
+    }
+
+    const profile = await UserProfile.findById(req.params.id);
+    if (!profile) {
+      return res.status(404).json({
+        success: false,
+        error: 'Profile not found'
+      } as ApiResponse);
+    }
+
+    // Ensure the profile belongs to the authenticated user
+    if (profile.uid !== req.user!.uid) {
+      return res.status(403).json({
+        success: false,
+        error: 'Not authorized to delete this profile'
+      } as ApiResponse);
+    }
+
+    await UserProfile.findByIdAndDelete(req.params.id);
+
+    return res.json({
+      success: true,
+      message: 'Profile deleted successfully'
+    } as ApiResponse);
+  } catch (error) {
+    console.error('Error deleting profile:', error);
+    return res.status(500).json({
+      success: false,
+      error: 'Internal server error'
+    } as ApiResponse);
+  }
+});
+
 // Get profile by ID (public endpoint)
 router.get('/:id', validateMongoId, async (req: express.Request, res: Response) => {
   try {

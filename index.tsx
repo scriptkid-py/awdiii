@@ -11,7 +11,7 @@ import { UserProfile } from './types';
 import { getUserProfile, getProfileById, initializeDefaultData, connectToDatabase } from './database-api';
 
 // Navigation component
-const Navigation: React.FC<{ userProfile: UserProfile | null }> = ({ userProfile }) => {
+const Navigation: React.FC<{ userProfile: UserProfile | null }> = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
 
@@ -21,6 +21,18 @@ const Navigation: React.FC<{ userProfile: UserProfile | null }> = ({ userProfile
       return;
     }
     navigate('/add-profile');
+  };
+
+  // Generate Gravatar URL from email
+  const getGravatarUrl = (email: string, size: number = 32) => {
+    // Simple MD5-like hash function for Gravatar (for demo purposes)
+    // In production, you'd want to use a proper MD5 library
+    const hash = email.toLowerCase().trim().split('').reduce((a, b) => {
+      a = ((a << 5) - a) + b.charCodeAt(0);
+      return a & a;
+    }, 0);
+    const hexHash = Math.abs(hash).toString(16).padStart(8, '0');
+    return `https://www.gravatar.com/avatar/${hexHash}?s=${size}&d=identicon`;
   };
 
   return (
@@ -42,7 +54,7 @@ const Navigation: React.FC<{ userProfile: UserProfile | null }> = ({ userProfile
             </button>
             <div className="user-info">
               <img 
-                src={user.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.displayName || 'User')}&background=6366f1&color=fff&size=32`}
+                src={user.photoURL || getGravatarUrl(user.email || 'user@example.com')}
                 alt={user.displayName || 'User'}
                 className="user-avatar"
               />
@@ -110,12 +122,19 @@ const ProfilePage: React.FC = () => {
     return <div style={{ textAlign: 'center', padding: '2rem' }}>Profile not found</div>;
   }
 
+  const handleProfileDelete = () => {
+    // Navigate back to home and refresh the page to clear any cached data
+    navigate('/');
+    window.location.reload();
+  };
+
   return (
     <ProfileView 
       profile={profile}
       onBack={() => navigate('/')}
       isOwnProfile={profile.uid === user?.uid}
       onEdit={profile.uid === user?.uid ? () => navigate('/add-profile') : undefined}
+      onDelete={profile.uid === user?.uid ? handleProfileDelete : undefined}
     />
   );
 };

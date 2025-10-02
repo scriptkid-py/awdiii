@@ -11,6 +11,8 @@
   --text-secondary-color: #64748b;
   --border-color: #e2e8f0;
   --success-color: #22c55e;
+  --danger-color: #ef4444;
+  --danger-hover-color: #dc2626;
   --font-family: 'Inter', sans-serif;
   --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
   --border-radius: 0.75rem;
@@ -1383,4 +1385,74 @@ main {
   .profile-card {
     padding: 1.5rem;
   }
+}
+
+/* Danger Button Styles */
+.button--danger {
+  background-color: var(--danger-color);
+  color: white;
+  border: none;
+}
+
+.button--danger:hover:not(:disabled) {
+  background-color: var(--danger-hover-color);
+}
+
+.button--danger:disabled {
+  background-color: #9ca3af;
+  cursor: not-allowed;
+}
+
+/* Modal Styles */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background-color: var(--card-background-color);
+  padding: 2rem;
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow);
+  max-width: 400px;
+  width: 90%;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.modal-content h3 {
+  margin-top: 0;
+  margin-bottom: 1rem;
+  color: var(--text-primary-color);
+}
+
+.modal-content p {
+  margin-bottom: 1.5rem;
+  color: var(--text-secondary-color);
+  line-height: 1.5;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+}
+
+.modal-actions .button {
+  min-width: 100px;
+}
+
+/* Profile Actions Header */
+.profile-actions-header {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
 }

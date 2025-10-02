@@ -169,6 +169,12 @@ class ApiClient {
     return this.request<UserProfile>(`/profiles/${profileId}`);
   }
 
+  async deleteUserProfile(profileId: string): Promise<ApiResponse<void>> {
+    return this.request<void>(`/profiles/${profileId}`, {
+      method: 'DELETE',
+    });
+  }
+
   // Skills API methods
   async getAllSkills(page: number = 1, limit: number = 50): Promise<PaginatedResponse<Skill[]>> {
     return this.request<Skill[]>(`/skills?page=${page}&limit=${limit}`);

@@ -112,6 +112,23 @@ export const getProfileById = async (
   }
 };
 
+export const deleteUserProfile = async (
+  profileId: string, 
+  stateManager?: MockStateManager
+): Promise<void> => {
+  try {
+    const response = await apiClient.deleteUserProfile(profileId);
+    if (!response.success) {
+      throw new Error(response.error || 'Failed to delete profile');
+    }
+  } catch (error) {
+    if (stateManager) {
+      stateManager.setLastError(error instanceof Error ? error.message : String(error));
+    }
+    throw error;
+  }
+};
+
 export const searchProfiles = async (
   filters: SearchFilters, 
   stateManager?: MockStateManager
