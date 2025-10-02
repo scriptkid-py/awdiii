@@ -138,6 +138,12 @@ const CreateProfile: React.FC<CreateProfileProps> = ({ onProfileComplete, existi
   };
 
   const handleCustomSkillAdd = () => {
+    console.log('handleCustomSkillAdd called');
+    console.log('customSkillInput:', customSkillInput);
+    console.log('customSkillInput.trim():', customSkillInput.trim());
+    console.log('formData.selectedSkills:', formData.selectedSkills);
+    console.log('includes check:', formData.selectedSkills.includes(customSkillInput.trim()));
+    
     if (customSkillInput.trim() && !formData.selectedSkills.includes(customSkillInput.trim())) {
       const newSkill = customSkillInput.trim();
       console.log('Adding custom skill:', newSkill);
@@ -157,6 +163,8 @@ const CreateProfile: React.FC<CreateProfileProps> = ({ onProfileComplete, existi
       if (errors.skills) {
         setErrors(prev => ({ ...prev, skills: '' }));
       }
+    } else {
+      console.log('Skill not added - either empty or already exists');
     }
   };
 
@@ -418,7 +426,11 @@ const CreateProfile: React.FC<CreateProfileProps> = ({ onProfileComplete, existi
                     <div className="custom-skill-buttons">
                       <button
                         type="button"
-                        onClick={handleCustomSkillAdd}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          handleCustomSkillAdd();
+                        }}
                         className="btn btn--small btn--primary"
                         disabled={!customSkillInput.trim()}
                       >
@@ -426,7 +438,11 @@ const CreateProfile: React.FC<CreateProfileProps> = ({ onProfileComplete, existi
                       </button>
                       <button
                         type="button"
-                        onClick={handleCustomSkillCancel}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          handleCustomSkillCancel();
+                        }}
                         className="btn btn--small btn--secondary"
                       >
                         Cancel
@@ -437,7 +453,24 @@ const CreateProfile: React.FC<CreateProfileProps> = ({ onProfileComplete, existi
               </div>
               {errors.skills && <p className="form-error">{errors.skills}</p>}
               {formData.selectedSkills.length > 0 && !errors.skills && (
-                <p className="form-success">Great! You've selected {formData.selectedSkills.length} skill{formData.selectedSkills.length !== 1 ? 's' : ''}.</p>
+                <div className="form-success">
+                  <p>Great! You've selected {formData.selectedSkills.length} skill{formData.selectedSkills.length !== 1 ? 's' : ''}.</p>
+                  <div className="selected-skills-display">
+                    {formData.selectedSkills.map((skill, index) => (
+                      <span key={index} className="skill-tag skill-tag--selected">
+                        {skill}
+                        <button
+                          type="button"
+                          onClick={() => handleSkillToggle(skill)}
+                          className="skill-remove"
+                          title="Remove skill"
+                        >
+                          ×
+                        </button>
+                      </span>
+                    ))}
+                  </div>
+                </div>
               )}
             </div>
 
