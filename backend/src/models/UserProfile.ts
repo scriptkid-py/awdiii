@@ -43,6 +43,10 @@ const userProfileSchema = new Schema<UserProfileDocument>({
     type: String,
     trim: true
   }],
+  interests: [{ 
+    type: String,
+    trim: true
+  }],
   availability: [{ 
     type: String,
     trim: true

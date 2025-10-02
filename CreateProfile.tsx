@@ -181,6 +181,9 @@ const CreateProfile: React.FC<CreateProfileProps> = ({ onProfileComplete, existi
         }
       };
 
+      console.log('Submitting profile data:', profileData);
+      console.log('User data:', { uid: user.uid, email: user.email });
+
       if (isEditMode && existingProfile) {
         // Update existing profile
         await updateUserProfile(existingProfile.id, profileData);

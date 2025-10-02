@@ -6,6 +6,7 @@ export interface UserProfile {
   email: string;
   bio?: string;
   skills: string[];
+  interests?: string[];
   availability: string[];
   university?: string;
   year?: string;

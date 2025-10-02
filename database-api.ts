@@ -16,12 +16,15 @@ export const createUserProfile = async (
   stateManager?: MockStateManager
 ): Promise<string> => {
   try {
+    console.log('Creating profile with data:', profile);
     const response = await apiClient.createUserProfile(profile);
+    console.log('Profile creation response:', response);
     if (response.success && response.data) {
       return response.data.id || 'created';
     }
     throw new Error(response.error || 'Failed to create profile');
   } catch (error) {
+    console.error('Profile creation error:', error);
     if (stateManager) {
       stateManager.setLastError(error instanceof Error ? error.message : String(error));
     }

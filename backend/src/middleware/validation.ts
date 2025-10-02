@@ -22,6 +22,13 @@ export const validateCreateProfile: ValidationChain[] = [
   body('skills.*')
     .isString()
     .withMessage('Each skill must be a string'),
+  body('interests')
+    .optional()
+    .isArray()
+    .withMessage('Interests must be an array'),
+  body('interests.*')
+    .isString()
+    .withMessage('Each interest must be a string'),
   body('availability')
     .isArray()
     .withMessage('Availability must be an array'),
@@ -77,6 +84,14 @@ export const validateUpdateProfile: ValidationChain[] = [
     .optional()
     .isString()
     .withMessage('Each skill must be a string'),
+  body('interests')
+    .optional()
+    .isArray()
+    .withMessage('Interests must be an array'),
+  body('interests.*')
+    .optional()
+    .isString()
+    .withMessage('Each interest must be a string'),
   body('availability')
     .optional()
     .isArray()
