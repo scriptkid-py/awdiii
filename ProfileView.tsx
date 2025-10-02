@@ -114,6 +114,7 @@ const ProfileView: React.FC<ProfileViewProps> = ({
         <div className="profile-page__section">
           <h2>Skills</h2>
           <div className="profile-page__skills">
+            {console.log('Profile skills being displayed:', profile.skills)}
             {(profile.skills || []).map(skill => (
               <span key={skill} className="skill-tag">{skill}</span>
             ))}

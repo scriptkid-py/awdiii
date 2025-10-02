@@ -139,10 +139,18 @@ const CreateProfile: React.FC<CreateProfileProps> = ({ onProfileComplete, existi
 
   const handleCustomSkillAdd = () => {
     if (customSkillInput.trim() && !formData.selectedSkills.includes(customSkillInput.trim())) {
-      setFormData(prev => ({
-        ...prev,
-        selectedSkills: [...prev.selectedSkills, customSkillInput.trim()]
-      }));
+      const newSkill = customSkillInput.trim();
+      console.log('Adding custom skill:', newSkill);
+      console.log('Current skills before:', formData.selectedSkills);
+      
+      setFormData(prev => {
+        const updatedSkills = [...prev.selectedSkills, newSkill];
+        console.log('Updated skills:', updatedSkills);
+        return {
+          ...prev,
+          selectedSkills: updatedSkills
+        };
+      });
       setCustomSkillInput('');
       setShowCustomSkillInput(false);
       
@@ -194,6 +202,7 @@ const CreateProfile: React.FC<CreateProfileProps> = ({ onProfileComplete, existi
       };
 
       console.log('Submitting profile data:', profileData);
+      console.log('Skills being sent to database:', profileData.skills);
       console.log('User data:', { uid: user.uid, email: user.email });
 
       if (isEditMode && existingProfile) {
