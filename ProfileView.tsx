@@ -182,11 +182,6 @@ const ProfileView: React.FC<ProfileViewProps> = ({
           <button onClick={onBack} className="button button--secondary">
             Back to Browse
           </button>
-          {!isOwnProfile && (
-            <button className="button">
-              Connect
-            </button>
-          )}
         </div>
 
         {/* Delete Confirmation Modal */}
