@@ -32,48 +32,38 @@ const CreateProfile: React.FC<CreateProfileProps> = ({ onProfileComplete, existi
   });
 
   useEffect(() => {
-    const loadData = async () => {
-      if (!user) return;
-      
-      try {
-        setLoading(true);
-        
-        // Set default values from existing profile or user data
-        if (existingProfile && isEditMode) {
-          setFormData({
-            displayName: existingProfile.displayName || '',
-            university: existingProfile.university || '',
-            selectedSkills: existingProfile.skills || [],
-            bio: existingProfile.bio || '',
-            contactInfo: {
-              email: existingProfile.contactInfo?.email || existingProfile.email || '',
-              social: {
-                linkedin: existingProfile.contactInfo?.social?.linkedin || '',
-                instagram: existingProfile.contactInfo?.social?.instagram || ''
-              }
-            },
-            availability: existingProfile.availability || [],
-            interests: existingProfile.interests || []
-          });
-        } else {
-          setFormData(prev => ({
-            ...prev,
-            displayName: user.displayName || '',
-            contactInfo: {
-              ...prev.contactInfo,
-              email: user.email || ''
-            }
-          }));
+    if (!user) return;
+    
+    // Set default values from existing profile or user data
+    if (existingProfile && isEditMode) {
+      setFormData({
+        displayName: existingProfile.displayName || '',
+        university: existingProfile.university || '',
+        selectedSkills: existingProfile.skills || [],
+        bio: existingProfile.bio || '',
+        contactInfo: {
+          email: existingProfile.contactInfo?.email || existingProfile.email || '',
+          social: {
+            linkedin: existingProfile.contactInfo?.social?.linkedin || '',
+            instagram: existingProfile.contactInfo?.social?.instagram || ''
+          }
+        },
+        availability: existingProfile.availability || [],
+        interests: existingProfile.interests || []
+      });
+    } else {
+      setFormData(prev => ({
+        ...prev,
+        displayName: user.displayName || '',
+        contactInfo: {
+          ...prev.contactInfo,
+          email: user.email || ''
         }
-        
-      } catch (error) {
-        console.error('Error loading skills:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    loadData();
+      }));
+    }
+    
+    // Set loading to false since we don't need to load anything from API
+    setLoading(false);
   }, [user, existingProfile, isEditMode]);
 
   const validateForm = () => {
