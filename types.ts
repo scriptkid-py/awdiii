@@ -9,8 +9,18 @@ export interface UserProfile {
   university?: string;
   year?: string;
   skills: string[];
-  interests: string[];
-  availability: 'available' | 'busy' | 'unavailable';
+  interests?: string[];
+  availability: string[];
+  contactInfo?: {
+    email?: string;
+    phone?: string;
+    social?: {
+      linkedin?: string;
+      github?: string;
+      twitter?: string;
+      instagram?: string;
+    };
+  };
   createdAt: Date;
   updatedAt: Date;
 }

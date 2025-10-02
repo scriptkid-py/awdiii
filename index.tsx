@@ -4,7 +4,6 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import { AuthProvider, useAuth } from './AuthContext';
   // No longer need MongoDB context - using backend API
 import Login from './Login';
-import ProfileManager from './ProfileManager';
 import CreateProfile from './CreateProfile';
 import SkillBrowser from './SkillBrowser';
 import ProfileView from './ProfileView';
@@ -100,7 +99,11 @@ const App: React.FC = () => {
         ) : showCreateProfile ? (
           <CreateProfile onProfileComplete={handleProfileComplete} />
         ) : showProfileManager ? (
-          <ProfileManager onProfileComplete={handleProfileComplete} />
+          <CreateProfile 
+            onProfileComplete={handleProfileComplete} 
+            existingProfile={userProfile}
+            isEditMode={true}
+          />
         ) : selectedProfile ? (
           <ProfileView 
             profile={selectedProfile}

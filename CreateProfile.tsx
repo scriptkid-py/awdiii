@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from './AuthContext';
 import { UserProfile, Skill } from './types';
-import { createUserProfile, getAllSkills } from './database-api';
+import { createUserProfile, updateUserProfile, getAllSkills } from './database-api';
 
 interface CreateProfileProps {
   onProfileComplete: (profile: UserProfile) => void;
+  existingProfile?: UserProfile | null;
+  isEditMode?: boolean;
 }
 
-const CreateProfile: React.FC<CreateProfileProps> = ({ onProfileComplete }) => {
+const CreateProfile: React.FC<CreateProfileProps> = ({ onProfileComplete, existingProfile, isEditMode = false }) => {
   const { user } = useAuth();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -26,7 +28,8 @@ const CreateProfile: React.FC<CreateProfileProps> = ({ onProfileComplete }) => {
         instagram: ''
       }
     },
-    availability: [] as string[]
+    availability: [] as string[],
+    interests: [] as string[]
   });
 
   useEffect(() => {
@@ -40,15 +43,33 @@ const CreateProfile: React.FC<CreateProfileProps> = ({ onProfileComplete }) => {
         const skillsData = await getAllSkills();
         setSkills(skillsData);
         
-        // Set default values
-        setFormData(prev => ({
-          ...prev,
-          displayName: user.displayName || '',
-          contactInfo: {
-            ...prev.contactInfo,
-            email: user.email || ''
-          }
-        }));
+        // Set default values from existing profile or user data
+        if (existingProfile && isEditMode) {
+          setFormData({
+            displayName: existingProfile.displayName || '',
+            university: existingProfile.university || '',
+            selectedSkills: existingProfile.skills || [],
+            bio: existingProfile.bio || '',
+            contactInfo: {
+              email: existingProfile.contactInfo?.email || existingProfile.email || '',
+              social: {
+                linkedin: existingProfile.contactInfo?.social?.linkedin || '',
+                instagram: existingProfile.contactInfo?.social?.instagram || ''
+              }
+            },
+            availability: existingProfile.availability || [],
+            interests: existingProfile.interests || []
+          });
+        } else {
+          setFormData(prev => ({
+            ...prev,
+            displayName: user.displayName || '',
+            contactInfo: {
+              ...prev.contactInfo,
+              email: user.email || ''
+            }
+          }));
+        }
         
       } catch (error) {
         console.error('Error loading skills:', error);
@@ -58,7 +79,7 @@ const CreateProfile: React.FC<CreateProfileProps> = ({ onProfileComplete }) => {
     };
 
     loadData();
-  }, [user]);
+  }, [user, existingProfile, isEditMode]);
 
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
@@ -102,16 +123,19 @@ const CreateProfile: React.FC<CreateProfileProps> = ({ onProfileComplete }) => {
     
     if (name.includes('.')) {
       const [parent, child, grandchild] = name.split('.');
-      setFormData(prev => ({
-        ...prev,
-        [parent]: {
-          ...prev[parent as keyof typeof prev],
-          [child]: grandchild ? {
-            ...(prev[parent as keyof typeof prev] as any)[child],
-            [grandchild]: value
-          } : value
-        }
-      }));
+      setFormData(prev => {
+        const parentObj = prev[parent as keyof typeof prev] as any;
+        return {
+          ...prev,
+          [parent]: {
+            ...parentObj,
+            [child]: grandchild ? {
+              ...(parentObj[child] || {}),
+              [grandchild]: value
+            } : value
+          }
+        };
+      });
     } else {
       setFormData(prev => ({
         ...prev,
@@ -162,6 +186,7 @@ const CreateProfile: React.FC<CreateProfileProps> = ({ onProfileComplete }) => {
         skills: formData.selectedSkills,
         availability: formData.availability,
         university: formData.university,
+        interests: formData.interests,
         contactInfo: {
           email: formData.contactInfo.email,
           social: {
@@ -171,24 +196,42 @@ const CreateProfile: React.FC<CreateProfileProps> = ({ onProfileComplete }) => {
         }
       };
 
-      const profileId = await createUserProfile(profileData);
-      const newProfile: UserProfile = {
-        id: profileId,
-        ...profileData,
-        createdAt: new Date(),
-        updatedAt: new Date()
-      };
-      
-      setSuccess(true);
-      
-      // Show success message for 2 seconds, then redirect
-      setTimeout(() => {
-        onProfileComplete(newProfile);
-      }, 2000);
+      if (isEditMode && existingProfile) {
+        // Update existing profile
+        await updateUserProfile(existingProfile.id, profileData);
+        const updatedProfile: UserProfile = {
+          ...existingProfile,
+          ...profileData,
+          updatedAt: new Date()
+        };
+        
+        setSuccess(true);
+        
+        // Show success message for 2 seconds, then redirect
+        setTimeout(() => {
+          onProfileComplete(updatedProfile);
+        }, 2000);
+      } else {
+        // Create new profile
+        const profileId = await createUserProfile(profileData);
+        const newProfile: UserProfile = {
+          id: profileId,
+          ...profileData,
+          createdAt: new Date(),
+          updatedAt: new Date()
+        };
+        
+        setSuccess(true);
+        
+        // Show success message for 2 seconds, then redirect
+        setTimeout(() => {
+          onProfileComplete(newProfile);
+        }, 2000);
+      }
       
     } catch (error) {
-      console.error('Error creating profile:', error);
-      setErrors({ submit: 'Failed to create profile. Please try again.' });
+      console.error(`Error ${isEditMode ? 'updating' : 'creating'} profile:`, error);
+      setErrors({ submit: `Failed to ${isEditMode ? 'update' : 'create'} profile. Please try again.` });
     } finally {
       setSaving(false);
     }
@@ -214,8 +257,12 @@ const CreateProfile: React.FC<CreateProfileProps> = ({ onProfileComplete }) => {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
             </svg>
           </div>
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">Profile Created Successfully!</h2>
-          <p className="text-gray-600 mb-4">Welcome to SkillShare! Redirecting to your profile...</p>
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">
+            Profile {isEditMode ? 'Updated' : 'Created'} Successfully!
+          </h2>
+          <p className="text-gray-600 mb-4">
+            {isEditMode ? 'Your changes have been saved!' : 'Welcome to SkillShare!'} Redirecting to your profile...
+          </p>
           <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-green-600 mx-auto"></div>
         </div>
       </div>
@@ -227,8 +274,12 @@ const CreateProfile: React.FC<CreateProfileProps> = ({ onProfileComplete }) => {
       <div className="max-w-2xl mx-auto">
         <div className="bg-white rounded-2xl shadow-xl p-8">
           <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">Create Your Profile</h1>
-            <p className="text-gray-600">Tell us about yourself and connect with others!</p>
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">
+              {isEditMode ? 'Edit Your Profile' : 'Create Your Profile'}
+            </h1>
+            <p className="text-gray-600">
+              {isEditMode ? 'Update your information and skills!' : 'Tell us about yourself and connect with others!'}
+            </p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">
@@ -403,10 +454,10 @@ const CreateProfile: React.FC<CreateProfileProps> = ({ onProfileComplete }) => {
                 {saving ? (
                   <div className="flex items-center justify-center">
                     <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
-                    Creating Profile...
+                    {isEditMode ? 'Updating Profile...' : 'Creating Profile...'}
                   </div>
                 ) : (
-                  'Create Profile'
+                  isEditMode ? 'Update Profile' : 'Create Profile'
                 )}
               </button>
             </div>
