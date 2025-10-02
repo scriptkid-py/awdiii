@@ -33,7 +33,8 @@ const contactInfoSchema = new Schema({
   social: {
     linkedin: { type: String },
     github: { type: String },
-    twitter: { type: String }
+    twitter: { type: String },
+    instagram: { type: String }
   }
 }, { _id: false });
 
