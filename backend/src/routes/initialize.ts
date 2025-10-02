@@ -8,32 +8,34 @@ const router = express.Router();
 // Initialize default data (skills and categories)
 router.post('/default-data', async (req, res) => {
   try {
-    // Check if skills already exist
-    const skillsCount = await Skill.countDocuments();
+    // Define all default skills
+    const defaultSkills = [
+      { name: 'JavaScript', category: 'Programming', level: 'intermediate' as const, description: 'Web development with JavaScript' },
+      { name: 'React', category: 'Programming', level: 'intermediate' as const, description: 'React library for building user interfaces' },
+      { name: 'Python', category: 'Programming', level: 'intermediate' as const, description: 'Python programming language' },
+      { name: 'Machine Learning', category: 'Data Science', level: 'advanced' as const, description: 'Machine learning algorithms and techniques' },
+      { name: 'Design', category: 'Creative', level: 'intermediate' as const, description: 'UI/UX design principles' },
+      { name: 'Photography', category: 'Creative', level: 'beginner' as const, description: 'Digital photography techniques' },
+      { name: 'Public Speaking', category: 'Communication', level: 'intermediate' as const, description: 'Effective public speaking skills' },
+      { name: 'Writing', category: 'Communication', level: 'intermediate' as const, description: 'Technical and creative writing' },
+      { name: 'Mathematics', category: 'Academic', level: 'advanced' as const, description: 'Advanced mathematics and statistics' },
+      { name: 'Languages', category: 'Communication', level: 'intermediate' as const, description: 'Foreign language proficiency' },
+      { name: 'Coding', category: 'Programming', level: 'intermediate' as const, description: 'General programming and software development' },
+      { name: 'Video Editing', category: 'Creative', level: 'intermediate' as const, description: 'Video editing and post-production' },
+      { name: 'Data Analysis', category: 'Data Science', level: 'intermediate' as const, description: 'Data analysis and visualization' },
+      { name: 'UI/UX', category: 'Creative', level: 'intermediate' as const, description: 'User interface and user experience design' },
+      { name: 'Marketing', category: 'Business', level: 'intermediate' as const, description: 'Digital marketing and brand strategy' },
+      { name: 'Project Management', category: 'Business', level: 'intermediate' as const, description: 'Project planning and team coordination' }
+    ];
+
+    // Add skills that don't already exist
     let skillsCreated = 0;
-    
-    if (skillsCount === 0) {
-      const defaultSkills = [
-        { name: 'JavaScript', category: 'Programming', level: 'intermediate' as const, description: 'Web development with JavaScript' },
-        { name: 'React', category: 'Programming', level: 'intermediate' as const, description: 'React library for building user interfaces' },
-        { name: 'Python', category: 'Programming', level: 'intermediate' as const, description: 'Python programming language' },
-        { name: 'Machine Learning', category: 'Data Science', level: 'advanced' as const, description: 'Machine learning algorithms and techniques' },
-        { name: 'Design', category: 'Creative', level: 'intermediate' as const, description: 'UI/UX design principles' },
-        { name: 'Photography', category: 'Creative', level: 'beginner' as const, description: 'Digital photography techniques' },
-        { name: 'Public Speaking', category: 'Communication', level: 'intermediate' as const, description: 'Effective public speaking skills' },
-        { name: 'Writing', category: 'Communication', level: 'intermediate' as const, description: 'Technical and creative writing' },
-        { name: 'Mathematics', category: 'Academic', level: 'advanced' as const, description: 'Advanced mathematics and statistics' },
-        { name: 'Languages', category: 'Communication', level: 'intermediate' as const, description: 'Foreign language proficiency' },
-        { name: 'Coding', category: 'Programming', level: 'intermediate' as const, description: 'General programming and software development' },
-        { name: 'Video Editing', category: 'Creative', level: 'intermediate' as const, description: 'Video editing and post-production' },
-        { name: 'Data Analysis', category: 'Data Science', level: 'intermediate' as const, description: 'Data analysis and visualization' },
-        { name: 'UI/UX', category: 'Creative', level: 'intermediate' as const, description: 'User interface and user experience design' },
-        { name: 'Marketing', category: 'Business', level: 'intermediate' as const, description: 'Digital marketing and brand strategy' },
-        { name: 'Project Management', category: 'Business', level: 'intermediate' as const, description: 'Project planning and team coordination' }
-      ];
-      
-      await Skill.insertMany(defaultSkills);
-      skillsCreated = defaultSkills.length;
+    for (const skillData of defaultSkills) {
+      const existingSkill = await Skill.findOne({ name: skillData.name });
+      if (!existingSkill) {
+        await Skill.create(skillData);
+        skillsCreated++;
+      }
     }
 
     // Check if categories already exist
