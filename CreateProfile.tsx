@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from './AuthContext';
-import { UserProfile, Skill } from './types';
-import { createUserProfile, updateUserProfile, getAllSkills } from './database-api';
+import { UserProfile } from './types';
+import { createUserProfile, updateUserProfile } from './database-api';
 
 interface CreateProfileProps {
   onProfileComplete: (profile: UserProfile) => void;
@@ -14,7 +14,6 @@ const CreateProfile: React.FC<CreateProfileProps> = ({ onProfileComplete, existi
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [success, setSuccess] = useState(false);
-  const [skills, setSkills] = useState<Skill[]>([]);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [formData, setFormData] = useState({
     displayName: '',
@@ -38,27 +37,6 @@ const CreateProfile: React.FC<CreateProfileProps> = ({ onProfileComplete, existi
       
       try {
         setLoading(true);
-        
-        // Set available skills directly
-        const skillsData = [
-          { id: '1', name: 'Design', category: 'Creative', level: 'intermediate', description: 'UI/UX design principles' },
-          { id: '2', name: 'Coding', category: 'Programming', level: 'intermediate', description: 'General programming and software development' },
-          { id: '3', name: 'Photography', category: 'Creative', level: 'beginner', description: 'Digital photography techniques' },
-          { id: '4', name: 'Writing', category: 'Communication', level: 'intermediate', description: 'Technical and creative writing' },
-          { id: '5', name: 'Public Speaking', category: 'Communication', level: 'intermediate', description: 'Effective public speaking skills' },
-          { id: '6', name: 'Video Editing', category: 'Creative', level: 'intermediate', description: 'Video editing and post-production' },
-          { id: '7', name: 'Marketing', category: 'Business', level: 'intermediate', description: 'Digital marketing and brand strategy' },
-          { id: '8', name: 'Data Analysis', category: 'Data Science', level: 'intermediate', description: 'Data analysis and visualization' },
-          { id: '9', name: 'Project Management', category: 'Business', level: 'intermediate', description: 'Project planning and team coordination' },
-          { id: '10', name: 'UI/UX', category: 'Creative', level: 'intermediate', description: 'User interface and user experience design' },
-          { id: '11', name: 'JavaScript', category: 'Programming', level: 'intermediate', description: 'Web development with JavaScript' },
-          { id: '12', name: 'React', category: 'Programming', level: 'intermediate', description: 'React library for building user interfaces' },
-          { id: '13', name: 'Python', category: 'Programming', level: 'intermediate', description: 'Python programming language' },
-          { id: '14', name: 'Machine Learning', category: 'Data Science', level: 'advanced', description: 'Machine learning algorithms and techniques' },
-          { id: '15', name: 'Mathematics', category: 'Academic', level: 'advanced', description: 'Advanced mathematics and statistics' },
-          { id: '16', name: 'Languages', category: 'Communication', level: 'intermediate', description: 'Foreign language proficiency' }
-        ];
-        setSkills(skillsData);
         
         // Set default values from existing profile or user data
         if (existingProfile && isEditMode) {
@@ -356,33 +334,37 @@ const CreateProfile: React.FC<CreateProfileProps> = ({ onProfileComplete, existi
             </div>
 
             {/* Skills */}
-            <div className="form-group">
-              <label className="form-label">
-                <span className="form-label-text">Skills</span>
-                <span className="form-label-required">*</span>
-                <span className="form-label-note">(Select all that apply)</span>
-                {formData.selectedSkills.length > 0 && (
-                  <span className="skills-counter">
-                    {formData.selectedSkills.length} selected
-                  </span>
-                )}
+            <div className="mt-4">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Skills (Select at least one)
               </label>
-              <div className="skills-grid">
-                {skills.map(skill => (
-                  <label key={skill.id} className={`skill-checkbox ${formData.selectedSkills.includes(skill.name) ? 'skill-checkbox--selected' : ''}`}>
+              <div className="grid grid-cols-2 gap-2">
+                {[
+                  "Design",
+                  "Photography",
+                  "Public Speaking",
+                  "Marketing",
+                  "Project Management",
+                  "Coding",
+                  "Writing",
+                  "Video Editing",
+                  "Data Analysis",
+                  "UI/UX",
+                ].map((skill) => (
+                  <label key={skill} className="inline-flex items-center space-x-2">
                     <input
                       type="checkbox"
-                      checked={formData.selectedSkills.includes(skill.name)}
-                      onChange={() => handleSkillToggle(skill.name)}
+                      name="skills"
+                      value={skill}
+                      checked={formData.selectedSkills.includes(skill)}
+                      onChange={() => handleSkillToggle(skill)}
+                      className="h-4 w-4 text-purple-600 border-gray-300 rounded"
                     />
-                    <span>{skill.name}</span>
+                    <span className="text-gray-700">{skill}</span>
                   </label>
                 ))}
               </div>
-              {errors.skills && <p className="form-error">{errors.skills}</p>}
-              {formData.selectedSkills.length > 0 && !errors.skills && (
-                <p className="form-success">Great! You've selected {formData.selectedSkills.length} skill{formData.selectedSkills.length !== 1 ? 's' : ''}.</p>
-              )}
+              {errors.skills && <p className="mt-1 text-sm text-red-600">{errors.skills}</p>}
             </div>
 
             {/* Short Bio */}
