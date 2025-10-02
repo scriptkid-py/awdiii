@@ -459,6 +459,22 @@ const CreateProfile: React.FC<CreateProfileProps> = ({ onProfileComplete, existi
                 />
                 {errors.instagram && <p className="form-error">{errors.instagram}</p>}
               </div>
+
+              {/* WhatsApp */}
+              <div className="form-group">
+                <label htmlFor="contactInfo.social.whatsapp" className="form-label">
+                  WhatsApp
+                </label>
+                <input
+                  type="text"
+                  id="contactInfo.social.whatsapp"
+                  name="contactInfo.social.whatsapp"
+                  value={formData.contactInfo.social.whatsapp}
+                  onChange={handleInputChange}
+                  className="form-input"
+                  placeholder="Phone number or wa.me link"
+                />
+              </div>
             </div>
 
             {/* Availability */}
