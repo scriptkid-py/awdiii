@@ -24,13 +24,13 @@ router.get('/me', authenticateToken, async (req: AuthenticatedRequest, res: Resp
       } as ApiResponse);
     }
 
-    res.json({
+    return res.json({
       success: true,
       data: profile
     } as ApiResponse);
   } catch (error) {
     console.error('Error fetching user profile:', error);
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       error: 'Internal server error'
     } as ApiResponse);
