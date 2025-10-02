@@ -26,7 +26,7 @@ export const getGravatarUrl = (email: string, size: number = 200): string => {
  */
 export const getProfilePictureUrl = (photoURL?: string, email?: string, size: number = 200): string => {
   // Use Firebase photoURL if available, otherwise fall back to Gravatar
-  if (photoURL && photoURL.trim()) {
+  if (photoURL && photoURL.trim() && photoURL !== 'undefined' && photoURL !== 'null') {
     return photoURL;
   }
   return getGravatarUrl(email || 'user@example.com', size);
