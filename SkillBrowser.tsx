@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { UserProfile, Skill, SkillCategory, SearchFilters } from './types';
 import { searchProfiles, getAllSkills, getSkillCategories } from './database-api';
+import { getProfilePictureUrl } from './utils';
 
 interface SkillBrowserProps {
   onProfileClick: (profile: UserProfile) => void;
@@ -157,7 +158,7 @@ const SkillBrowser: React.FC<SkillBrowserProps> = ({ onProfileClick }) => {
                 >
                   <div className="profile-avatar">
                     <img 
-                      src={profile.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(profile.displayName)}&background=6366f1&color=fff&size=120`} 
+                      src={getProfilePictureUrl(profile.photoURL, profile.email, 120)} 
                       alt={profile.displayName}
                       className="avatar-image"
                     />

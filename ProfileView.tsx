@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { UserProfile } from './types';
 import { deleteUserProfile } from './database-api';
+import { getProfilePictureUrl } from './utils';
 
 interface ProfileViewProps {
   profile: UserProfile;
@@ -34,17 +35,6 @@ const ProfileView: React.FC<ProfileViewProps> = ({
     );
   }
 
-  // Generate Gravatar URL from email
-  const getGravatarUrl = (email: string, size: number = 200) => {
-    // Simple MD5-like hash function for Gravatar (for demo purposes)
-    // In production, you'd want to use a proper MD5 library
-    const hash = email.toLowerCase().trim().split('').reduce((a, b) => {
-      a = ((a << 5) - a) + b.charCodeAt(0);
-      return a & a;
-    }, 0);
-    const hexHash = Math.abs(hash).toString(16).padStart(8, '0');
-    return `https://www.gravatar.com/avatar/${hexHash}?s=${size}&d=identicon`;
-  };
 
   const handleDeleteProfile = async () => {
     if (!isOwnProfile || !profile.id) return;
@@ -70,7 +60,7 @@ const ProfileView: React.FC<ProfileViewProps> = ({
       <div className="profile-page">
         <div className="profile-page__header">
           <img 
-            src={profile.photoURL || getGravatarUrl(profile.email || 'user@example.com')} 
+            src={getProfilePictureUrl(profile.photoURL, profile.email, 200)} 
             alt={profile.displayName || 'User'}
             className="profile-page__image"
           />

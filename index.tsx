@@ -9,6 +9,7 @@ import SkillBrowser from './SkillBrowser';
 import ProfileView from './ProfileView';
 import { UserProfile } from './types';
 import { getUserProfile, getProfileById, initializeDefaultData, connectToDatabase } from './database-api';
+import { getProfilePictureUrl } from './utils';
 
 // Navigation component
 const Navigation: React.FC<{ userProfile: UserProfile | null }> = () => {
@@ -23,17 +24,6 @@ const Navigation: React.FC<{ userProfile: UserProfile | null }> = () => {
     navigate('/add-profile');
   };
 
-  // Generate Gravatar URL from email
-  const getGravatarUrl = (email: string, size: number = 32) => {
-    // Simple MD5-like hash function for Gravatar (for demo purposes)
-    // In production, you'd want to use a proper MD5 library
-    const hash = email.toLowerCase().trim().split('').reduce((a, b) => {
-      a = ((a << 5) - a) + b.charCodeAt(0);
-      return a & a;
-    }, 0);
-    const hexHash = Math.abs(hash).toString(16).padStart(8, '0');
-    return `https://www.gravatar.com/avatar/${hexHash}?s=${size}&d=identicon`;
-  };
 
   return (
     <header className="header">
@@ -54,7 +44,7 @@ const Navigation: React.FC<{ userProfile: UserProfile | null }> = () => {
             </button>
             <div className="user-info">
               <img 
-                src={user.photoURL || getGravatarUrl(user.email || 'user@example.com')}
+                src={getProfilePictureUrl(user.photoURL || undefined, user.email || undefined, 32)}
                 alt={user.displayName || 'User'}
                 className="user-avatar"
               />

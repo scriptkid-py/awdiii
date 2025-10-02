@@ -1,5 +1,6 @@
 import React from 'react';
 import { useAuth } from './AuthContext';
+import { getProfilePictureUrl } from './utils';
 
 // A simple SVG for the Google icon
 const GoogleIcon = () => (
@@ -24,7 +25,7 @@ const Login: React.FC = () => {
     return (
       <div className="user-info">
         <img 
-          src={user.photoURL || undefined} 
+          src={getProfilePictureUrl(user.photoURL || undefined, user.email || undefined, 32)} 
           alt={user.displayName || 'User Avatar'} 
           className="user-info__avatar" 
         />
