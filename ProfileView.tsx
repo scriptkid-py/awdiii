@@ -20,6 +20,20 @@ const ProfileView: React.FC<ProfileViewProps> = ({
   const [isDeleting, setIsDeleting] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
+  // Add safety check for profile data
+  if (!profile) {
+    return (
+      <div className="profile-view">
+        <div style={{ textAlign: 'center', padding: '2rem' }}>
+          <p>Profile data is not available</p>
+          <button onClick={onBack} className="button button--secondary">
+            Back to Browse
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   // Generate Gravatar URL from email
   const getGravatarUrl = (email: string, size: number = 200) => {
     // Simple MD5-like hash function for Gravatar (for demo purposes)
@@ -56,12 +70,12 @@ const ProfileView: React.FC<ProfileViewProps> = ({
       <div className="profile-page">
         <div className="profile-page__header">
           <img 
-            src={profile.photoURL || getGravatarUrl(profile.email)} 
-            alt={profile.displayName}
+            src={profile.photoURL || getGravatarUrl(profile.email || 'user@example.com')} 
+            alt={profile.displayName || 'User'}
             className="profile-page__image"
           />
           <div className="profile-page__info">
-            <h1 className="profile-page__name">{profile.displayName}</h1>
+            <h1 className="profile-page__name">{profile.displayName || 'Unknown User'}</h1>
             {profile.major && (
               <p className="profile-page__major">{profile.major}</p>
             )}
@@ -71,8 +85,8 @@ const ProfileView: React.FC<ProfileViewProps> = ({
             {profile.year && (
               <p className="profile-page__year">{profile.year}</p>
             )}
-            <div className={`profile-page__availability profile-page__availability--${profile.availability}`}>
-              {profile.availability}
+            <div className={`profile-page__availability profile-page__availability--${Array.isArray(profile.availability) ? profile.availability[0] : profile.availability}`}>
+              {Array.isArray(profile.availability) ? profile.availability.join(', ') : profile.availability}
             </div>
           </div>
           {isOwnProfile && (
@@ -103,17 +117,17 @@ const ProfileView: React.FC<ProfileViewProps> = ({
         <div className="profile-page__section">
           <h2>Skills</h2>
           <div className="profile-page__skills">
-            {profile.skills.map(skill => (
+            {(profile.skills || []).map(skill => (
               <span key={skill} className="skill-tag">{skill}</span>
             ))}
           </div>
         </div>
 
-        {profile.interests.length > 0 && (
+        {profile.interests && profile.interests.length > 0 && (
           <div className="profile-page__section">
             <h2>Interests</h2>
             <div className="profile-page__skills">
-              {profile.interests.map(interest => (
+              {(profile.interests || []).map(interest => (
                 <span key={interest} className="skill-tag">{interest}</span>
               ))}
             </div>
@@ -123,8 +137,8 @@ const ProfileView: React.FC<ProfileViewProps> = ({
         <div className="profile-page__section">
           <h2>Contact</h2>
           <div className="profile-page__contact">
-            <a href={`mailto:${profile.email}`} className="contact-link">
-              📧 {profile.email}
+            <a href={`mailto:${profile.email || 'user@example.com'}`} className="contact-link">
+              📧 {profile.email || 'No email provided'}
             </a>
           </div>
         </div>

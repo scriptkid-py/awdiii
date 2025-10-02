@@ -101,9 +101,15 @@ const ProfilePage: React.FC = () => {
 
   useEffect(() => {
     const loadProfile = async () => {
-      if (!profileId) return;
+      if (!profileId) {
+        console.log('No profile ID found');
+        setLoading(false);
+        return;
+      }
+      console.log('Loading profile with ID:', profileId);
       try {
         const profileData = await getProfileById(profileId);
+        console.log('Profile data loaded:', profileData);
         setProfile(profileData);
       } catch (error) {
         console.error('Error loading profile:', error);
@@ -121,6 +127,8 @@ const ProfilePage: React.FC = () => {
   if (!profile) {
     return <div style={{ textAlign: 'center', padding: '2rem' }}>Profile not found</div>;
   }
+
+  console.log('Rendering profile:', profile);
 
   const handleProfileDelete = () => {
     // Navigate back to home and refresh the page to clear any cached data
