@@ -167,6 +167,7 @@ const CreateProfile: React.FC<CreateProfileProps> = ({ onProfileComplete, existi
         uid: user.uid,
         displayName: formData.displayName,
         email: user.email || '',
+        photoURL: user.photoURL || undefined,
         bio: formData.bio,
         skills: formData.selectedSkills,
         availability: formData.availability,
