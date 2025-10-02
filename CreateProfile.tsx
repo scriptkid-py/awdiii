@@ -24,7 +24,8 @@ const CreateProfile: React.FC<CreateProfileProps> = ({ onProfileComplete, existi
       email: '',
       social: {
         linkedin: '',
-        instagram: ''
+        instagram: '',
+        whatsapp: ''
       }
     },
     availability: [] as string[],
@@ -45,7 +46,8 @@ const CreateProfile: React.FC<CreateProfileProps> = ({ onProfileComplete, existi
           email: existingProfile.contactInfo?.email || existingProfile.email || '',
           social: {
             linkedin: existingProfile.contactInfo?.social?.linkedin || '',
-            instagram: existingProfile.contactInfo?.social?.instagram || ''
+            instagram: existingProfile.contactInfo?.social?.instagram || '',
+            whatsapp: existingProfile.contactInfo?.social?.whatsapp || ''
           }
         },
         availability: existingProfile.availability || [],
@@ -81,14 +83,7 @@ const CreateProfile: React.FC<CreateProfileProps> = ({ onProfileComplete, existi
       newErrors.skills = 'At least one skill is required';
     }
     
-    // Validate URLs if provided
-    if (formData.contactInfo.social.linkedin && !isValidUrl(formData.contactInfo.social.linkedin)) {
-      newErrors.linkedin = 'Please enter a valid LinkedIn URL';
-    }
-    
-    if (formData.contactInfo.social.instagram && !isValidUrl(formData.contactInfo.social.instagram)) {
-      newErrors.instagram = 'Please enter a valid Instagram URL';
-    }
+    // Social inputs are free text; no strict URL validation
     
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -177,7 +172,8 @@ const CreateProfile: React.FC<CreateProfileProps> = ({ onProfileComplete, existi
           email: formData.contactInfo.email,
           social: {
             linkedin: formData.contactInfo.social.linkedin || undefined,
-            instagram: formData.contactInfo.social.instagram || undefined
+            instagram: formData.contactInfo.social.instagram || undefined,
+            whatsapp: formData.contactInfo.social.whatsapp || undefined
           }
         }
       };

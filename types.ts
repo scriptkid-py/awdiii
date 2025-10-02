@@ -19,6 +19,7 @@ export interface UserProfile {
       github?: string;
       twitter?: string;
       instagram?: string;
+      whatsapp?: string;
     };
   };
   createdAt: Date;

@@ -162,6 +162,19 @@ const ProfileView: React.FC<ProfileViewProps> = ({
                 🐦 Twitter Profile
               </a>
             )}
+
+          {profile.contactInfo?.social?.whatsapp && (
+            <a
+              href={profile.contactInfo.social.whatsapp.startsWith('http') || profile.contactInfo.social.whatsapp.startsWith('wa:')
+                ? profile.contactInfo.social.whatsapp
+                : `https://wa.me/${profile.contactInfo.social.whatsapp.replace(/[^\d+]/g, '')}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="contact-link"
+            >
+              💬 WhatsApp
+            </a>
+          )}
           </div>
         </div>
 
