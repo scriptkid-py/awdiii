@@ -39,8 +39,25 @@ const CreateProfile: React.FC<CreateProfileProps> = ({ onProfileComplete, existi
       try {
         setLoading(true);
         
-        // Load available skills
-        const skillsData = await getAllSkills();
+        // Set available skills directly
+        const skillsData = [
+          { id: '1', name: 'Design', category: 'Creative', level: 'intermediate', description: 'UI/UX design principles' },
+          { id: '2', name: 'Coding', category: 'Programming', level: 'intermediate', description: 'General programming and software development' },
+          { id: '3', name: 'Photography', category: 'Creative', level: 'beginner', description: 'Digital photography techniques' },
+          { id: '4', name: 'Writing', category: 'Communication', level: 'intermediate', description: 'Technical and creative writing' },
+          { id: '5', name: 'Public Speaking', category: 'Communication', level: 'intermediate', description: 'Effective public speaking skills' },
+          { id: '6', name: 'Video Editing', category: 'Creative', level: 'intermediate', description: 'Video editing and post-production' },
+          { id: '7', name: 'Marketing', category: 'Business', level: 'intermediate', description: 'Digital marketing and brand strategy' },
+          { id: '8', name: 'Data Analysis', category: 'Data Science', level: 'intermediate', description: 'Data analysis and visualization' },
+          { id: '9', name: 'Project Management', category: 'Business', level: 'intermediate', description: 'Project planning and team coordination' },
+          { id: '10', name: 'UI/UX', category: 'Creative', level: 'intermediate', description: 'User interface and user experience design' },
+          { id: '11', name: 'JavaScript', category: 'Programming', level: 'intermediate', description: 'Web development with JavaScript' },
+          { id: '12', name: 'React', category: 'Programming', level: 'intermediate', description: 'React library for building user interfaces' },
+          { id: '13', name: 'Python', category: 'Programming', level: 'intermediate', description: 'Python programming language' },
+          { id: '14', name: 'Machine Learning', category: 'Data Science', level: 'advanced', description: 'Machine learning algorithms and techniques' },
+          { id: '15', name: 'Mathematics', category: 'Academic', level: 'advanced', description: 'Advanced mathematics and statistics' },
+          { id: '16', name: 'Languages', category: 'Communication', level: 'intermediate', description: 'Foreign language proficiency' }
+        ];
         setSkills(skillsData);
         
         // Set default values from existing profile or user data
