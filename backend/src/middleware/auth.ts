@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
-import { auth } from 'firebase-admin';
-import { initializeApp, cert, getApps } from 'firebase-admin/app';
+import { getAuth } from 'firebase-admin/auth';
+import { initializeApp, getApps } from 'firebase-admin/app';
 
 // Initialize Firebase Admin SDK if not already initialized
 if (getApps().length === 0) {
@@ -35,7 +35,7 @@ export const authenticateToken = async (req: AuthenticatedRequest, res: Response
   }
 
   try {
-    const decodedToken = await auth().verifyIdToken(token);
+    const decodedToken = await getAuth().verifyIdToken(token);
     req.user = {
       uid: decodedToken.uid,
       email: decodedToken.email || ''
@@ -57,7 +57,7 @@ export const optionalAuth = async (req: AuthenticatedRequest, res: Response, nex
 
   if (token) {
     try {
-      const decodedToken = await auth().verifyIdToken(token);
+      const decodedToken = await getAuth().verifyIdToken(token);
       req.user = {
         uid: decodedToken.uid,
         email: decodedToken.email || ''
