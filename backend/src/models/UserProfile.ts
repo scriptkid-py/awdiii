@@ -35,6 +35,8 @@ const contactInfoSchema = new Schema({
     github: { type: String },
     twitter: { type: String },
     instagram: { type: String }
+    ,
+    whatsapp: { type: String }
   }
 }, { _id: false });
 

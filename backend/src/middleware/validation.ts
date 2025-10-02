@@ -51,14 +51,11 @@ export const validateCreateProfile: ValidationChain[] = [
     .optional()
     .isString()
     .withMessage('Phone must be a string'),
-  body('contactInfo.social.linkedin')
-    .optional()
-    .isURL()
-    .withMessage('LinkedIn URL must be valid'),
-  body('contactInfo.social.instagram')
-    .optional()
-    .isURL()
-    .withMessage('Instagram URL must be valid')
+  // Social media: make optional, no strict URL requirement
+  body('contactInfo.social.linkedin').optional(),
+  body('contactInfo.social.instagram').optional(),
+  body('contactInfo.social.twitter').optional(),
+  body('contactInfo.social.whatsapp').optional()
 ];
 
 export const validateUpdateProfile: ValidationChain[] = [
@@ -116,14 +113,10 @@ export const validateUpdateProfile: ValidationChain[] = [
     .optional()
     .isString()
     .withMessage('Phone must be a string'),
-  body('contactInfo.social.linkedin')
-    .optional()
-    .isURL()
-    .withMessage('LinkedIn URL must be valid'),
-  body('contactInfo.social.instagram')
-    .optional()
-    .isURL()
-    .withMessage('Instagram URL must be valid')
+  body('contactInfo.social.linkedin').optional(),
+  body('contactInfo.social.instagram').optional(),
+  body('contactInfo.social.twitter').optional(),
+  body('contactInfo.social.whatsapp').optional()
 ];
 
 // Skill Validation

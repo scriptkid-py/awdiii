@@ -4,6 +4,7 @@ export interface UserProfile {
   uid: string;
   displayName: string;
   email: string;
+  photoURL?: string;
   bio?: string;
   skills: string[];
   interests?: string[];
@@ -17,6 +18,8 @@ export interface UserProfile {
       linkedin?: string;
       github?: string;
       twitter?: string;
+      instagram?: string;
+      whatsapp?: string;
     };
   };
   createdAt?: Date;
