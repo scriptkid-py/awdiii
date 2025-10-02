@@ -31,6 +31,8 @@ const CreateProfile: React.FC<CreateProfileProps> = ({ onProfileComplete, existi
     availability: [] as string[],
     interests: [] as string[]
   });
+  const [showCustomSkillInput, setShowCustomSkillInput] = useState(false);
+  const [customSkillInput, setCustomSkillInput] = useState('');
 
   useEffect(() => {
     if (!user) return;
@@ -89,14 +91,7 @@ const CreateProfile: React.FC<CreateProfileProps> = ({ onProfileComplete, existi
     return Object.keys(newErrors).length === 0;
   };
 
-  const isValidUrl = (url: string) => {
-    try {
-      new URL(url);
-      return true;
-    } catch {
-      return false;
-    }
-  };
+  // URL validation removed as social inputs are free text now
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -140,6 +135,26 @@ const CreateProfile: React.FC<CreateProfileProps> = ({ onProfileComplete, existi
     if (errors.skills) {
       setErrors(prev => ({ ...prev, skills: '' }));
     }
+  };
+
+  const handleCustomSkillAdd = () => {
+    if (customSkillInput.trim() && !formData.selectedSkills.includes(customSkillInput.trim())) {
+      setFormData(prev => ({
+        ...prev,
+        selectedSkills: [...prev.selectedSkills, customSkillInput.trim()]
+      }));
+      setCustomSkillInput('');
+      setShowCustomSkillInput(false);
+      
+      if (errors.skills) {
+        setErrors(prev => ({ ...prev, skills: '' }));
+      }
+    }
+  };
+
+  const handleCustomSkillCancel = () => {
+    setCustomSkillInput('');
+    setShowCustomSkillInput(false);
   };
 
   const handleAvailabilityToggle = (availability: string) => {
@@ -369,6 +384,47 @@ const CreateProfile: React.FC<CreateProfileProps> = ({ onProfileComplete, existi
                     <span>{skill}</span>
                   </label>
                 ))}
+                
+                {/* Other skill button */}
+                {!showCustomSkillInput && (
+                  <label 
+                    className="skill-checkbox skill-checkbox--other"
+                    onClick={() => setShowCustomSkillInput(true)}
+                  >
+                    <span>+ Other</span>
+                  </label>
+                )}
+                
+                {/* Custom skill input */}
+                {showCustomSkillInput && (
+                  <div className="custom-skill-input">
+                    <input
+                      type="text"
+                      value={customSkillInput}
+                      onChange={(e) => setCustomSkillInput(e.target.value)}
+                      placeholder="Enter your skill"
+                      className="form-input"
+                      autoFocus
+                    />
+                    <div className="custom-skill-buttons">
+                      <button
+                        type="button"
+                        onClick={handleCustomSkillAdd}
+                        className="btn btn--small btn--primary"
+                        disabled={!customSkillInput.trim()}
+                      >
+                        Add
+                      </button>
+                      <button
+                        type="button"
+                        onClick={handleCustomSkillCancel}
+                        className="btn btn--small btn--secondary"
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  </div>
+                )}
               </div>
               {errors.skills && <p className="form-error">{errors.skills}</p>}
               {formData.selectedSkills.length > 0 && !errors.skills && (
