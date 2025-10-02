@@ -699,14 +699,6 @@ main {
     }
 }
 
-/* Create Profile Page */
-.create-profile-page {
-  background-color: var(--background-color);
-  min-height: 100vh;
-  padding: 2rem;
-  animation: fadeIn 0.5s ease-out;
-}
-
 @keyframes fadeIn {
   from {
     opacity: 0;

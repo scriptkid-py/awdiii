@@ -272,8 +272,7 @@ const CreateProfile: React.FC<CreateProfileProps> = ({ onProfileComplete, existi
   }
 
   return (
-    <div className="create-profile-page">
-      <div className="create-profile-container">
+    <div className="create-profile-container">
         <div className="create-profile-card">
           <div className="create-profile-header">
             <h1 className="create-profile-title">
@@ -500,7 +499,6 @@ const CreateProfile: React.FC<CreateProfileProps> = ({ onProfileComplete, existi
           </form>
         </div>
       </div>
-    </div>
   );
 };
 
