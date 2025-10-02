@@ -334,11 +334,13 @@ const CreateProfile: React.FC<CreateProfileProps> = ({ onProfileComplete, existi
             </div>
 
             {/* Skills */}
-            <div className="mt-4">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Skills (Select at least one)
+            <div className="form-group">
+              <label className="form-label">
+                <span className="form-label-text">Skills</span>
+                <span className="form-label-required">*</span>
+                <span className="form-label-note">(Select at least one)</span>
               </label>
-              <div className="grid grid-cols-2 gap-2">
+              <div className="skills-grid">
                 {[
                   "Design",
                   "Photography",
@@ -351,20 +353,20 @@ const CreateProfile: React.FC<CreateProfileProps> = ({ onProfileComplete, existi
                   "Data Analysis",
                   "UI/UX",
                 ].map((skill) => (
-                  <label key={skill} className="inline-flex items-center space-x-2">
+                  <label key={skill} className={`skill-checkbox ${formData.selectedSkills.includes(skill) ? 'skill-checkbox--selected' : ''}`}>
                     <input
                       type="checkbox"
-                      name="skills"
-                      value={skill}
                       checked={formData.selectedSkills.includes(skill)}
                       onChange={() => handleSkillToggle(skill)}
-                      className="h-4 w-4 text-purple-600 border-gray-300 rounded"
                     />
-                    <span className="text-gray-700">{skill}</span>
+                    <span>{skill}</span>
                   </label>
                 ))}
               </div>
-              {errors.skills && <p className="mt-1 text-sm text-red-600">{errors.skills}</p>}
+              {errors.skills && <p className="form-error">{errors.skills}</p>}
+              {formData.selectedSkills.length > 0 && !errors.skills && (
+                <p className="form-success">Great! You've selected {formData.selectedSkills.length} skill{formData.selectedSkills.length !== 1 ? 's' : ''}.</p>
+              )}
             </div>
 
             {/* Short Bio */}
