@@ -469,8 +469,7 @@ const CreateProfile: React.FC<CreateProfileProps> = ({ onProfileComplete, existi
               <div className="availability-options">
                 {[
                   { value: 'projects', label: 'Open for projects' },
-                  { value: 'tutoring', label: 'Available for tutoring' },
-                  { value: 'both', label: 'Both projects and tutoring' }
+                  { value: 'tutoring', label: 'Available for tutoring' }
                 ].map(option => (
                   <label key={option.value} className="availability-checkbox">
                     <input
