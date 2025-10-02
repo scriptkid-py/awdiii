@@ -250,20 +250,22 @@ const CreateProfile: React.FC<CreateProfileProps> = ({ onProfileComplete, existi
 
   if (success) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-green-50 to-emerald-100 flex items-center justify-center">
-        <div className="bg-white rounded-2xl shadow-xl p-8 text-center max-w-md mx-4">
-          <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-            </svg>
+      <div className="success-page">
+        <div className="success-container">
+          <div className="success-card">
+            <div className="success-icon">
+              <svg className="success-checkmark" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+              </svg>
+            </div>
+            <h2 className="success-title">
+              Profile {isEditMode ? 'Updated' : 'Created'} Successfully!
+            </h2>
+            <p className="success-message">
+              {isEditMode ? 'Your changes have been saved!' : 'Welcome to SkillShare!'} Redirecting to your profile...
+            </p>
+            <div className="success-spinner"></div>
           </div>
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">
-            Profile {isEditMode ? 'Updated' : 'Created'} Successfully!
-          </h2>
-          <p className="text-gray-600 mb-4">
-            {isEditMode ? 'Your changes have been saved!' : 'Welcome to SkillShare!'} Redirecting to your profile...
-          </p>
-          <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-green-600 mx-auto"></div>
         </div>
       </div>
     );
@@ -286,45 +288,72 @@ const CreateProfile: React.FC<CreateProfileProps> = ({ onProfileComplete, existi
             {/* Full Name */}
             <div className="form-group">
               <label htmlFor="displayName" className="form-label">
-                Full Name *
+                <span className="form-label-text">Full Name</span>
+                <span className="form-label-required">*</span>
               </label>
-              <input
-                type="text"
-                id="displayName"
-                name="displayName"
-                value={formData.displayName}
-                onChange={handleInputChange}
-                className={`form-input ${errors.displayName ? 'form-input--error' : ''}`}
-                placeholder="Enter your full name"
-              />
+              <div className="form-input-wrapper">
+                <input
+                  type="text"
+                  id="displayName"
+                  name="displayName"
+                  value={formData.displayName}
+                  onChange={handleInputChange}
+                  className={`form-input ${errors.displayName ? 'form-input--error' : formData.displayName ? 'form-input--valid' : ''}`}
+                  placeholder="Enter your full name"
+                />
+                {formData.displayName && !errors.displayName && (
+                  <div className="form-input-icon form-input-icon--success">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                  </div>
+                )}
+              </div>
               {errors.displayName && <p className="form-error">{errors.displayName}</p>}
             </div>
 
             {/* University */}
             <div className="form-group">
               <label htmlFor="university" className="form-label">
-                University *
+                <span className="form-label-text">University</span>
+                <span className="form-label-required">*</span>
               </label>
-              <input
-                type="text"
-                id="university"
-                name="university"
-                value={formData.university}
-                onChange={handleInputChange}
-                className={`form-input ${errors.university ? 'form-input--error' : ''}`}
-                placeholder="e.g., Stanford University"
-              />
+              <div className="form-input-wrapper">
+                <input
+                  type="text"
+                  id="university"
+                  name="university"
+                  value={formData.university}
+                  onChange={handleInputChange}
+                  className={`form-input ${errors.university ? 'form-input--error' : formData.university ? 'form-input--valid' : ''}`}
+                  placeholder="e.g., Stanford University"
+                />
+                {formData.university && !errors.university && (
+                  <div className="form-input-icon form-input-icon--success">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                  </div>
+                )}
+              </div>
               {errors.university && <p className="form-error">{errors.university}</p>}
             </div>
 
             {/* Skills */}
             <div className="form-group">
               <label className="form-label">
-                Skills * <span className="form-label-note">(Select all that apply)</span>
+                <span className="form-label-text">Skills</span>
+                <span className="form-label-required">*</span>
+                <span className="form-label-note">(Select all that apply)</span>
+                {formData.selectedSkills.length > 0 && (
+                  <span className="skills-counter">
+                    {formData.selectedSkills.length} selected
+                  </span>
+                )}
               </label>
               <div className="skills-grid">
                 {skills.map(skill => (
-                  <label key={skill.id} className="skill-checkbox">
+                  <label key={skill.id} className={`skill-checkbox ${formData.selectedSkills.includes(skill.name) ? 'skill-checkbox--selected' : ''}`}>
                     <input
                       type="checkbox"
                       checked={formData.selectedSkills.includes(skill.name)}
@@ -335,22 +364,39 @@ const CreateProfile: React.FC<CreateProfileProps> = ({ onProfileComplete, existi
                 ))}
               </div>
               {errors.skills && <p className="form-error">{errors.skills}</p>}
+              {formData.selectedSkills.length > 0 && !errors.skills && (
+                <p className="form-success">Great! You've selected {formData.selectedSkills.length} skill{formData.selectedSkills.length !== 1 ? 's' : ''}.</p>
+              )}
             </div>
 
             {/* Short Bio */}
             <div className="form-group">
               <label htmlFor="bio" className="form-label">
-                Short Bio
+                <span className="form-label-text">Short Bio</span>
+                <span className="bio-counter">
+                  {formData.bio.length}/500 characters
+                </span>
               </label>
-              <textarea
-                id="bio"
-                name="bio"
-                rows={4}
-                value={formData.bio}
-                onChange={handleInputChange}
-                className="form-textarea"
-                placeholder="Tell us about yourself, your interests, and what you're passionate about..."
-              />
+              <div className="form-textarea-wrapper">
+                <textarea
+                  id="bio"
+                  name="bio"
+                  rows={4}
+                  maxLength={500}
+                  value={formData.bio}
+                  onChange={handleInputChange}
+                  className="form-textarea"
+                  placeholder="Tell us about yourself, your interests, and what you're passionate about..."
+                />
+              </div>
+              {formData.bio.length > 0 && (
+                <p className="form-hint">
+                  {formData.bio.length < 50 ? 
+                    'Consider adding more details to help others get to know you better!' :
+                    'Great bio! This gives others a good sense of who you are.'
+                  }
+                </p>
+              )}
             </div>
 
             {/* Social Links */}
