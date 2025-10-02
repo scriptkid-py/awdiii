@@ -54,5 +54,4 @@ export interface SearchFilters {
   availability: string[];
   university?: string;
   year?: string;
-  searchTerm?: string;
 }

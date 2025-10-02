@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { UserProfile, Skill, SkillCategory, SearchFilters } from './types';
-import { searchProfiles, getAllSkills, getSkillCategories } from './database-api';
+import { UserProfile, SearchFilters } from './types';
+import { searchProfiles } from './database-api';
 import { getProfilePictureUrl } from './utils';
 import { useAuth } from './AuthContext';
 
@@ -11,27 +11,18 @@ interface SkillBrowserProps {
 const SkillBrowser: React.FC<SkillBrowserProps> = ({ onProfileClick }) => {
   const { user } = useAuth(); // Get current Firebase user
   const [profiles, setProfiles] = useState<UserProfile[]>([]);
-  const [skills, setSkills] = useState<Skill[]>([]);
-  const [categories, setCategories] = useState<SkillCategory[]>([]);
   const [loading, setLoading] = useState(true);
   const [filters, setFilters] = useState<SearchFilters>({
     skills: [],
     categories: [],
-    availability: [],
-    searchTerm: ''
+    availability: []
   });
 
   useEffect(() => {
     const loadData = async () => {
       try {
         setLoading(true);
-        const [skillsData, categoriesData, profilesData] = await Promise.all([
-          getAllSkills(),
-          getSkillCategories(),
-          searchProfiles(filters)
-        ]);
-        setSkills(skillsData);
-        setCategories(categoriesData);
+        const profilesData = await searchProfiles(filters);
         setProfiles(profilesData);
       } catch (error) {
         console.error('Error loading data:', error);
@@ -57,19 +48,12 @@ const SkillBrowser: React.FC<SkillBrowserProps> = ({ onProfileClick }) => {
     });
   };
 
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFilters(prev => ({
-      ...prev,
-      searchTerm: e.target.value
-    }));
-  };
 
   const clearFilters = () => {
     setFilters({
       skills: [],
       categories: [],
-      availability: [],
-      searchTerm: ''
+      availability: []
     });
   };
 
@@ -88,16 +72,6 @@ const SkillBrowser: React.FC<SkillBrowserProps> = ({ onProfileClick }) => {
       <div className="browse-layout">
         {/* Left Sidebar */}
         <aside className="browse-sidebar">
-          <div className="search-section">
-            <h3 className="sidebar-title">Search</h3>
-            <input
-              type="text"
-              placeholder="Search by name..."
-              value={filters.searchTerm || ''}
-              onChange={handleSearchChange}
-              className="search-input"
-            />
-          </div>
 
           <div className="filter-section">
             <h3 className="sidebar-title">Filter by Skill</h3>
@@ -162,7 +136,7 @@ const SkillBrowser: React.FC<SkillBrowserProps> = ({ onProfileClick }) => {
                     <img 
                       src={getProfilePictureUrl(
                         // Use Firebase user's photo if this is the current user's profile
-                        profile.uid === user?.uid ? user.photoURL : profile.photoURL, 
+                        profile.uid === user?.uid ? (user.photoURL || undefined) : profile.photoURL, 
                         profile.email, 
                         120
                       )} 
