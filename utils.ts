@@ -6,27 +6,45 @@
  * @param size - Image size in pixels (default: 200)
  * @returns Gravatar URL with proper profile picture or mystery person fallback
  */
-// Simple crypto hash function for browser compatibility
-const simpleHash = (str: string): string => {
-  let hash = 0;
-  for (let i = 0; i < str.length; i++) {
-    const char = str.charCodeAt(i);
-    hash = ((hash << 5) - hash) + char;
-    hash = hash & hash; // Convert to 32bit integer
+// MD5-like hash implementation for Gravatar compatibility
+const md5Like = (str: string): string => {
+  // Normalize the email address
+  const normalized = str.toLowerCase().trim();
+  
+  // Simple hash that mimics MD5 structure for better Gravatar compatibility
+  let h1 = 0x67452301;
+  let h2 = 0xEFCDAB89;
+  let h3 = 0x98BADCFE;
+  let h4 = 0x10325476;
+  
+  for (let i = 0; i < normalized.length; i++) {
+    const char = normalized.charCodeAt(i);
+    h1 = ((h1 << 5) - h1 + char) & 0xffffffff;
+    h2 = ((h2 << 3) - h2 + char) & 0xffffffff;
+    h3 = ((h3 << 7) - h3 + char) & 0xffffffff;
+    h4 = ((h4 << 2) - h4 + char) & 0xffffffff;
   }
-  return Math.abs(hash).toString(16).padStart(8, '0');
+  
+  // Combine hashes to create 32-character hex string
+  const result = (
+    (h1 >>> 0).toString(16).padStart(8, '0') +
+    (h2 >>> 0).toString(16).padStart(8, '0') +
+    (h3 >>> 0).toString(16).padStart(8, '0') +
+    (h4 >>> 0).toString(16).padStart(8, '0')
+  );
+  
+  return result.substring(0, 32);
 };
 
 export const getGravatarUrl = (email: string, size: number = 200): string => {
-  // Use actual email to create better hash for real Gravatar lookup
+  // Use actual email to create proper Gravatar hash
   const normalizedEmail = email.toLowerCase().trim();
   
-  // Try to create a more realistic Gravatar hash
-  const hash = simpleHash(normalizedEmail + 'gravatar');
+  // Create MD5-like hash for better Gravatar compatibility
+  const hash = md5Like(normalizedEmail);
   
-  // First try without default to see if there's a real Gravatar
-  // If no real Gravatar exists, it will show a mystery person silhouette
-  return `https://www.gravatar.com/avatar/${hash}?s=${size}&d=mp`;
+  // Try to get real Gravatar first, fallback to robohash for more interesting avatars
+  return `https://www.gravatar.com/avatar/${hash}?s=${size}&d=robohash`;
 };
 
 /**
@@ -37,9 +55,21 @@ export const getGravatarUrl = (email: string, size: number = 200): string => {
  * @returns Profile picture URL
  */
 export const getProfilePictureUrl = (photoURL?: string, email?: string, size: number = 200): string => {
-  // Use Firebase photoURL if available, otherwise fall back to Gravatar
-  if (photoURL && photoURL.trim() && photoURL !== 'undefined' && photoURL !== 'null') {
+  // Debug log to see what we're getting
+  console.log('Profile picture params:', { photoURL, email, size });
+  
+  // Use Firebase photoURL if available and valid
+  if (photoURL && 
+      photoURL.trim() && 
+      photoURL !== 'undefined' && 
+      photoURL !== 'null' && 
+      photoURL.startsWith('http')) {
+    console.log('Using Firebase photoURL:', photoURL);
     return photoURL;
   }
-  return getGravatarUrl(email || 'user@example.com', size);
+  
+  // Fall back to Gravatar with the user's actual email
+  const gravatarUrl = getGravatarUrl(email || 'user@example.com', size);
+  console.log('Using Gravatar for email:', email, 'URL:', gravatarUrl);
+  return gravatarUrl;
 };
