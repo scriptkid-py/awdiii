@@ -23,7 +23,13 @@ router.post('/default-data', async (req, res) => {
         { name: 'Public Speaking', category: 'Communication', level: 'intermediate' as const, description: 'Effective public speaking skills' },
         { name: 'Writing', category: 'Communication', level: 'intermediate' as const, description: 'Technical and creative writing' },
         { name: 'Mathematics', category: 'Academic', level: 'advanced' as const, description: 'Advanced mathematics and statistics' },
-        { name: 'Languages', category: 'Communication', level: 'intermediate' as const, description: 'Foreign language proficiency' }
+        { name: 'Languages', category: 'Communication', level: 'intermediate' as const, description: 'Foreign language proficiency' },
+        { name: 'Coding', category: 'Programming', level: 'intermediate' as const, description: 'General programming and software development' },
+        { name: 'Video Editing', category: 'Creative', level: 'intermediate' as const, description: 'Video editing and post-production' },
+        { name: 'Data Analysis', category: 'Data Science', level: 'intermediate' as const, description: 'Data analysis and visualization' },
+        { name: 'UI/UX', category: 'Creative', level: 'intermediate' as const, description: 'User interface and user experience design' },
+        { name: 'Marketing', category: 'Business', level: 'intermediate' as const, description: 'Digital marketing and brand strategy' },
+        { name: 'Project Management', category: 'Business', level: 'intermediate' as const, description: 'Project planning and team coordination' }
       ];
       
       await Skill.insertMany(defaultSkills);
