@@ -7,6 +7,7 @@ import Login from './Login';
 import CreateProfile from './CreateProfile';
 import SkillBrowser from './SkillBrowser';
 import ProfileView from './ProfileView';
+import ProtectedRoute from './ProtectedRoute';
 import { UserProfile } from './types';
 import { getUserProfile, initializeDefaultData, connectToDatabase } from './database-api';
 
@@ -45,6 +46,8 @@ const App: React.FC = () => {
     setUserProfile(profile);
     setShowProfileManager(false);
     setShowCreateProfile(false);
+    // Redirect to browse page after profile creation
+    setSelectedProfile(null);
   };
 
   const handleProfileClick = (profile: UserProfile) => {
@@ -58,6 +61,13 @@ const App: React.FC = () => {
   const handleEditProfile = () => {
     setShowProfileManager(true);
     setShowCreateProfile(false);
+  };
+
+  const handleUnauthorizedAccess = () => {
+    // Redirect to login page if user tries to access protected content
+    setShowCreateProfile(false);
+    setShowProfileManager(false);
+    setSelectedProfile(null);
   };
 
   if (loading) {
@@ -85,6 +95,14 @@ const App: React.FC = () => {
               </button>
             </>
           )}
+          {user && !userProfile && (
+            <button 
+              onClick={() => setShowCreateProfile(true)}
+              className="header__cta"
+            >
+              Add Your Profile
+            </button>
+          )}
           <Login />
         </nav>
       </header>
@@ -97,13 +115,17 @@ const App: React.FC = () => {
             <Login />
           </div>
         ) : showCreateProfile ? (
-          <CreateProfile onProfileComplete={handleProfileComplete} />
+          <ProtectedRoute onUnauthorized={handleUnauthorizedAccess}>
+            <CreateProfile onProfileComplete={handleProfileComplete} />
+          </ProtectedRoute>
         ) : showProfileManager ? (
-          <CreateProfile 
-            onProfileComplete={handleProfileComplete} 
-            existingProfile={userProfile}
-            isEditMode={true}
-          />
+          <ProtectedRoute onUnauthorized={handleUnauthorizedAccess}>
+            <CreateProfile 
+              onProfileComplete={handleProfileComplete} 
+              existingProfile={userProfile}
+              isEditMode={true}
+            />
+          </ProtectedRoute>
         ) : selectedProfile ? (
           <ProfileView 
             profile={selectedProfile}
