@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { UserProfile } from './types';
 import { deleteUserProfile } from './database-api';
 import { getProfilePictureUrl } from './utils';
+import { useAuth } from './AuthContext';
 
 interface ProfileViewProps {
   profile: UserProfile;
@@ -18,6 +19,7 @@ const ProfileView: React.FC<ProfileViewProps> = ({
   onEdit,
   onDelete
 }) => {
+  const { user } = useAuth(); // Get current Firebase user
   const [isDeleting, setIsDeleting] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
@@ -60,7 +62,12 @@ const ProfileView: React.FC<ProfileViewProps> = ({
       <div className="profile-page">
         <div className="profile-page__header">
           <img 
-            src={getProfilePictureUrl(profile.photoURL, profile.email, 200)} 
+            src={getProfilePictureUrl(
+              // Use Firebase user's photo if this is the current user's profile
+              profile.uid === user?.uid ? user.photoURL : profile.photoURL, 
+              profile.email, 
+              200
+            )} 
             alt={profile.displayName || 'User'}
             className="profile-page__image"
           />

@@ -62,19 +62,27 @@ export const getSocialMediaProfilePicture = (socialUrl?: string, platform?: stri
 export const getProfilePictureUrl = (photoURL?: string, email?: string, size: number = 200): string => {
   console.log('🔍 Profile picture debug:', { photoURL, email, size });
   
-  // 1. FIRST PRIORITY: Firebase profile picture (from Google login)
+  // 1. FIRST PRIORITY: Firebase/Google profile picture 
   if (photoURL && 
       photoURL.trim() && 
       photoURL !== 'undefined' && 
       photoURL !== 'null' && 
-      photoURL.startsWith('http')) {
+      (photoURL.startsWith('http') || photoURL.startsWith('https'))) {
+    
+    // If it's a Google photo, adjust size parameter for better quality
+    if (photoURL.includes('googleusercontent.com')) {
+      const googlePhotoUrl = photoURL.replace(/=s\d+-c$/, `=s${size}-c`);
+      console.log('✅ Using Google profile photo:', googlePhotoUrl);
+      return googlePhotoUrl;
+    }
+    
     console.log('✅ Using Firebase profile photo:', photoURL);
     return photoURL;
   }
   
-  // 2. FALLBACK: Email-based Gravatar - ENSURE CONSISTENT EMAIL
+  // 2. FALLBACK: Email-based Gravatar (should rarely be used now)
   const normalizedEmail = email?.toLowerCase().trim() || 'user@example.com';
   const gravatarUrl = getGravatarUrl(normalizedEmail, size);
-  console.log('📧 Using email-based Gravatar for:', normalizedEmail, '→', gravatarUrl);
+  console.log('⚠️ Falling back to Gravatar for:', normalizedEmail, '→', gravatarUrl);
   return gravatarUrl;
 };

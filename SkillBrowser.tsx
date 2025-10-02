@@ -2,12 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { UserProfile, Skill, SkillCategory, SearchFilters } from './types';
 import { searchProfiles, getAllSkills, getSkillCategories } from './database-api';
 import { getProfilePictureUrl } from './utils';
+import { useAuth } from './AuthContext';
 
 interface SkillBrowserProps {
   onProfileClick: (profile: UserProfile) => void;
 }
 
 const SkillBrowser: React.FC<SkillBrowserProps> = ({ onProfileClick }) => {
+  const { user } = useAuth(); // Get current Firebase user
   const [profiles, setProfiles] = useState<UserProfile[]>([]);
   const [skills, setSkills] = useState<Skill[]>([]);
   const [categories, setCategories] = useState<SkillCategory[]>([]);
@@ -158,7 +160,12 @@ const SkillBrowser: React.FC<SkillBrowserProps> = ({ onProfileClick }) => {
                 >
                   <div className="profile-avatar">
                     <img 
-                      src={getProfilePictureUrl(profile.photoURL, profile.email, 120)} 
+                      src={getProfilePictureUrl(
+                        // Use Firebase user's photo if this is the current user's profile
+                        profile.uid === user?.uid ? user.photoURL : profile.photoURL, 
+                        profile.email, 
+                        120
+                      )} 
                       alt={profile.displayName}
                       className="avatar-image"
                     />
