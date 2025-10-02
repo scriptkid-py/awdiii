@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { Response } from 'express';
 import { validationResult } from 'express-validator';
 import { Skill } from '../models/Skill.js';
 import { authenticateToken } from '../middleware/auth.js';
@@ -60,7 +60,7 @@ router.get('/', async (req, res) => {
 });
 
 // Create skill (authenticated endpoint)
-router.post('/', authenticateToken, validateCreateSkill, async (req, res) => {
+router.post('/', authenticateToken, validateCreateSkill, async (req: express.Request, res: Response) => {
   try {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -97,7 +97,7 @@ router.post('/', authenticateToken, validateCreateSkill, async (req, res) => {
 });
 
 // Get skill by ID
-router.get('/:id', validateMongoId, async (req, res) => {
+router.get('/:id', validateMongoId, async (req: express.Request, res: Response) => {
   try {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {

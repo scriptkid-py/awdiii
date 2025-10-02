@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { Response } from 'express';
 import { validationResult } from 'express-validator';
 import { UserProfile } from '../models/UserProfile.js';
 import { authenticateToken, optionalAuth, AuthenticatedRequest } from '../middleware/auth.js';
@@ -13,7 +13,7 @@ import { ApiResponse, PaginatedResponse, SearchFilters } from '../types.js';
 const router = express.Router();
 
 // Get user profile by UID
-router.get('/me', authenticateToken, async (req: AuthenticatedRequest, res) => {
+router.get('/me', authenticateToken, async (req: AuthenticatedRequest, res: Response) => {
   try {
     const profile = await UserProfile.findOne({ uid: req.user!.uid });
     
@@ -38,7 +38,7 @@ router.get('/me', authenticateToken, async (req: AuthenticatedRequest, res) => {
 });
 
 // Create user profile
-router.post('/', authenticateToken, validateCreateProfile, async (req: AuthenticatedRequest, res) => {
+router.post('/', authenticateToken, validateCreateProfile, async (req: AuthenticatedRequest, res: Response) => {
   try {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -82,7 +82,7 @@ router.post('/', authenticateToken, validateCreateProfile, async (req: Authentic
 });
 
 // Update user profile
-router.put('/:id', authenticateToken, validateUpdateProfile, async (req: AuthenticatedRequest, res) => {
+router.put('/:id', authenticateToken, validateUpdateProfile, async (req: AuthenticatedRequest, res: Response) => {
   try {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -165,7 +165,7 @@ router.get('/', optionalAuth, async (req: AuthenticatedRequest, res) => {
 });
 
 // Search profiles
-router.get('/search', optionalAuth, validateSearch, async (req: AuthenticatedRequest, res) => {
+router.get('/search', optionalAuth, validateSearch, async (req: AuthenticatedRequest, res: Response) => {
   try {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -255,7 +255,7 @@ router.get('/search', optionalAuth, validateSearch, async (req: AuthenticatedReq
 });
 
 // Get profile by ID (public endpoint)
-router.get('/:id', validateMongoId, async (req, res) => {
+router.get('/:id', validateMongoId, async (req: express.Request, res: Response) => {
   try {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {

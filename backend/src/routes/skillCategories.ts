@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { Response } from 'express';
 import { validationResult } from 'express-validator';
 import { SkillCategory } from '../models/SkillCategory.js';
 import { authenticateToken } from '../middleware/auth.js';
@@ -50,7 +50,7 @@ router.get('/', async (req, res) => {
 });
 
 // Create skill category (authenticated endpoint)
-router.post('/', authenticateToken, validateCreateSkillCategory, async (req, res) => {
+router.post('/', authenticateToken, validateCreateSkillCategory, async (req: express.Request, res: Response) => {
   try {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -87,7 +87,7 @@ router.post('/', authenticateToken, validateCreateSkillCategory, async (req, res
 });
 
 // Get skill category by ID
-router.get('/:id', validateMongoId, async (req, res) => {
+router.get('/:id', validateMongoId, async (req: express.Request, res: Response) => {
   try {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {

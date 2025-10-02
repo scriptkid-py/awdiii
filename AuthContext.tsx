@@ -7,6 +7,7 @@ import {
 } from 'firebase/auth';
 // FIX: Corrected import path for firebase module.
 import { auth, provider } from './firebase'; // Import from the new firebase file
+import { apiClient } from './api-client';
 
 interface AuthContextType {
   user: User | null;
@@ -22,8 +23,22 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       setUser(currentUser);
+      
+      // Set the auth token in the API client
+      if (currentUser) {
+        try {
+          const token = await currentUser.getIdToken();
+          apiClient.setAuthToken(token);
+        } catch (error) {
+          console.error('Error getting Firebase ID token:', error);
+          apiClient.setAuthToken(null);
+        }
+      } else {
+        apiClient.setAuthToken(null);
+      }
+      
       setLoading(false);
     });
     return () => unsubscribe();

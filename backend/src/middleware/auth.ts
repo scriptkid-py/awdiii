@@ -1,10 +1,18 @@
 import { Request, Response, NextFunction } from 'express';
-import jwt from 'jsonwebtoken';
+import { auth } from 'firebase-admin';
+import { initializeApp, cert, getApps } from 'firebase-admin/app';
 
-const JWT_SECRET = process.env.JWT_SECRET;
-
-if (!JWT_SECRET) {
-  throw new Error('JWT_SECRET environment variable is required');
+// Initialize Firebase Admin SDK if not already initialized
+if (getApps().length === 0) {
+  // For development, we'll use a simple approach
+  // In production, you should use proper service account credentials
+  try {
+    initializeApp({
+      projectId: process.env.FIREBASE_PROJECT_ID || 'knoweachother-ba559'
+    });
+  } catch (error) {
+    console.error('Failed to initialize Firebase Admin:', error);
+  }
 }
 
 export interface AuthenticatedRequest extends Request {
@@ -14,42 +22,45 @@ export interface AuthenticatedRequest extends Request {
   };
 }
 
-export const authenticateToken = (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+export const authenticateToken = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
   const authHeader = req.headers['authorization'];
   const token = authHeader && authHeader.split(' ')[1]; // Bearer TOKEN
 
   if (!token) {
-    return res.status(401).json({
+    res.status(401).json({
       success: false,
       error: 'Access token required'
     });
+    return;
   }
 
   try {
-    const decoded = jwt.verify(token, JWT_SECRET) as any;
+    const decodedToken = await auth().verifyIdToken(token);
     req.user = {
-      uid: decoded.uid,
-      email: decoded.email
+      uid: decodedToken.uid,
+      email: decodedToken.email || ''
     };
     next();
   } catch (error) {
-    return res.status(403).json({
+    console.error('Token verification error:', error);
+    res.status(403).json({
       success: false,
       error: 'Invalid or expired token'
     });
+    return;
   }
 };
 
-export const optionalAuth = (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+export const optionalAuth = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
   const authHeader = req.headers['authorization'];
   const token = authHeader && authHeader.split(' ')[1];
 
   if (token) {
     try {
-      const decoded = jwt.verify(token, JWT_SECRET) as any;
+      const decodedToken = await auth().verifyIdToken(token);
       req.user = {
-        uid: decoded.uid,
-        email: decoded.email
+        uid: decodedToken.uid,
+        email: decodedToken.email || ''
       };
     } catch (error) {
       // Token is invalid, but we continue without authentication
