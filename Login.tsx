@@ -1,6 +1,5 @@
 import React from 'react';
 import { useAuth } from './AuthContext';
-import { getProfilePictureUrl } from './utils';
 
 // A simple SVG for the Google icon
 const GoogleIcon = () => (
@@ -21,17 +20,9 @@ const Login: React.FC = () => {
   }
 
   if (user) {
-    // User is logged in
+    // User is logged in — show only a simple logout button (no name/picture)
     return (
-      <div className="user-info">
-        <img 
-          src={getProfilePictureUrl(user.photoURL || undefined, user.email || undefined, 32)} 
-          alt={user.displayName || 'User Avatar'} 
-          className="user-info__avatar" 
-        />
-        <span className="user-info__name">{user.displayName}</span>
-        <button onClick={handleLogout} className="user-info__logout">Logout</button>
-      </div>
+      <button onClick={handleLogout} className="user-info__logout">Logout</button>
     );
   }
 
