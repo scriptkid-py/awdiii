@@ -51,11 +51,11 @@ export const validateCreateProfile: ValidationChain[] = [
     .optional()
     .isString()
     .withMessage('Phone must be a string'),
-  // Social media: make optional, no strict URL requirement
-  body('contactInfo.social.linkedin').optional(),
-  body('contactInfo.social.instagram').optional(),
-  body('contactInfo.social.twitter').optional(),
-  body('contactInfo.social.whatsapp').optional()
+  // Social media: make optional, no strict URL requirement - allow any text
+  body('contactInfo.social.linkedin').optional().isString().withMessage('LinkedIn must be a string'),
+  body('contactInfo.social.instagram').optional().isString().withMessage('Instagram must be a string'),
+  body('contactInfo.social.twitter').optional().isString().withMessage('Twitter must be a string'),
+  body('contactInfo.social.whatsapp').optional().isString().withMessage('WhatsApp must be a string')
 ];
 
 export const validateUpdateProfile: ValidationChain[] = [
@@ -113,10 +113,10 @@ export const validateUpdateProfile: ValidationChain[] = [
     .optional()
     .isString()
     .withMessage('Phone must be a string'),
-  body('contactInfo.social.linkedin').optional(),
-  body('contactInfo.social.instagram').optional(),
-  body('contactInfo.social.twitter').optional(),
-  body('contactInfo.social.whatsapp').optional()
+  body('contactInfo.social.linkedin').optional().isString().withMessage('LinkedIn must be a string'),
+  body('contactInfo.social.instagram').optional().isString().withMessage('Instagram must be a string'),
+  body('contactInfo.social.twitter').optional().isString().withMessage('Twitter must be a string'),
+  body('contactInfo.social.whatsapp').optional().isString().withMessage('WhatsApp must be a string')
 ];
 
 // Skill Validation
