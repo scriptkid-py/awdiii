@@ -7,6 +7,7 @@ import Login from './Login';
 import CreateProfile from './CreateProfile';
 import SkillBrowser from './SkillBrowser';
 import ProfileView from './ProfileView';
+import AboutUs from './AboutUs';
 import { UserProfile } from './types';
 import { getUserProfile, getProfileById, initializeDefaultData, connectToDatabase } from './database-api';
 import { getProfilePictureUrl } from './utils';
@@ -35,6 +36,9 @@ const Navigation: React.FC<{ userProfile: UserProfile | null }> = () => {
           <>
             <button onClick={() => navigate('/')} className="nav-link">
               Browse
+            </button>
+            <button onClick={() => navigate('/about')} className="nav-link">
+              About
             </button>
             <button 
               onClick={handleAddProfile}
@@ -227,6 +231,7 @@ const App: React.FC = () => {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/add-profile" element={<AddProfilePage />} />
           <Route path="/profile/:id" element={<ProfilePage />} />
+          <Route path="/about" element={<AboutUs />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </main>
