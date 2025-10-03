@@ -29,7 +29,7 @@ services:
     env: node
     plan: free
     buildCommand: npm install && npm run build
-    startCommand: node server.js
+    startCommand: node server.mjs
     envVars:
       - key: VITE_API_BASE_URL
         value: https://awdiii.onrender.com/api
