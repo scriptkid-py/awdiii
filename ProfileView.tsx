@@ -140,7 +140,76 @@ const ProfileView: React.FC<ProfileViewProps> = ({
               📧 {profile.email || 'No email provided'}
             </a>
             
-            {/* Social Media Links */}
+            {/* Dynamic Social Media Links */}
+            {profile.contactInfo?.socialLinks && profile.contactInfo.socialLinks.length > 0 && (
+              <>
+                {profile.contactInfo.socialLinks.map((link) => {
+                  // Generate appropriate URL based on platform and input
+                  const getSocialUrl = (platform: string, url: string) => {
+                    const platformLower = platform.toLowerCase();
+                    
+                    // If it's already a full URL, use it
+                    if (url.startsWith('http')) {
+                      return url;
+                    }
+                    
+                    // Generate URLs for common platforms
+                    switch (platformLower) {
+                      case 'linkedin':
+                        return `https://linkedin.com/in/${url}`;
+                      case 'instagram':
+                        return `https://instagram.com/${url}`;
+                      case 'twitter':
+                        return `https://twitter.com/${url}`;
+                      case 'github':
+                        return `https://github.com/${url}`;
+                      case 'whatsapp':
+                        return url.startsWith('wa:') ? url : `https://wa.me/${url.replace(/[^\d+]/g, '')}`;
+                      case 'youtube':
+                        return `https://youtube.com/@${url}`;
+                      case 'tiktok':
+                        return `https://tiktok.com/@${url}`;
+                      case 'discord':
+                        return `https://discord.com/users/${url}`;
+                      default:
+                        return url; // Use as-is for unknown platforms
+                    }
+                  };
+
+                  // Get appropriate emoji for platform
+                  const getPlatformEmoji = (platform: string) => {
+                    const platformLower = platform.toLowerCase();
+                    switch (platformLower) {
+                      case 'linkedin': return '💼';
+                      case 'instagram': return '📸';
+                      case 'twitter': return '🐦';
+                      case 'github': return '💻';
+                      case 'whatsapp': return '💬';
+                      case 'youtube': return '📺';
+                      case 'tiktok': return '🎵';
+                      case 'discord': return '🎮';
+                      case 'facebook': return '📘';
+                      case 'snapchat': return '👻';
+                      default: return '🔗';
+                    }
+                  };
+
+                  return (
+                    <a
+                      key={link.id}
+                      href={getSocialUrl(link.platform, link.url)}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="contact-link"
+                    >
+                      {getPlatformEmoji(link.platform)} {link.platform}
+                    </a>
+                  );
+                })}
+              </>
+            )}
+
+            {/* Legacy Social Media Links (for backward compatibility) */}
             {profile.contactInfo?.social?.linkedin && (
               <a href={profile.contactInfo.social.linkedin} target="_blank" rel="noopener noreferrer" className="contact-link">
                 💼 LinkedIn Profile
@@ -165,18 +234,18 @@ const ProfileView: React.FC<ProfileViewProps> = ({
               </a>
             )}
 
-          {profile.contactInfo?.social?.whatsapp && (
-            <a
-              href={profile.contactInfo.social.whatsapp.startsWith('http') || profile.contactInfo.social.whatsapp.startsWith('wa:')
-                ? profile.contactInfo.social.whatsapp
-                : `https://wa.me/${profile.contactInfo.social.whatsapp.replace(/[^\d+]/g, '')}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="contact-link"
-            >
-              💬 WhatsApp
-            </a>
-          )}
+            {profile.contactInfo?.social?.whatsapp && (
+              <a
+                href={profile.contactInfo.social.whatsapp.startsWith('http') || profile.contactInfo.social.whatsapp.startsWith('wa:')
+                  ? profile.contactInfo.social.whatsapp
+                  : `https://wa.me/${profile.contactInfo.social.whatsapp.replace(/[^\d+]/g, '')}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="contact-link"
+              >
+                💬 WhatsApp
+              </a>
+            )}
           </div>
         </div>
 

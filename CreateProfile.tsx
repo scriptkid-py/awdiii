@@ -26,7 +26,12 @@ const CreateProfile: React.FC<CreateProfileProps> = ({ onProfileComplete, existi
         linkedin: '',
         instagram: '',
         whatsapp: ''
-      }
+      },
+      socialLinks: [] as Array<{
+        id: string;
+        platform: string;
+        url: string;
+      }>
     },
     availability: [] as string[],
     interests: [] as string[]
@@ -50,7 +55,8 @@ const CreateProfile: React.FC<CreateProfileProps> = ({ onProfileComplete, existi
             linkedin: existingProfile.contactInfo?.social?.linkedin || '',
             instagram: existingProfile.contactInfo?.social?.instagram || '',
             whatsapp: existingProfile.contactInfo?.social?.whatsapp || ''
-          }
+          },
+          socialLinks: existingProfile.contactInfo?.socialLinks || []
         },
         availability: existingProfile.availability || [],
         interests: existingProfile.interests || []
@@ -173,6 +179,44 @@ const CreateProfile: React.FC<CreateProfileProps> = ({ onProfileComplete, existi
     setShowCustomSkillInput(false);
   };
 
+  // Social Media Links handlers
+  const addSocialLink = () => {
+    const newLink = {
+      id: Date.now().toString(),
+      platform: '',
+      url: ''
+    };
+    setFormData(prev => ({
+      ...prev,
+      contactInfo: {
+        ...prev.contactInfo,
+        socialLinks: [...prev.contactInfo.socialLinks, newLink]
+      }
+    }));
+  };
+
+  const updateSocialLink = (id: string, field: 'platform' | 'url', value: string) => {
+    setFormData(prev => ({
+      ...prev,
+      contactInfo: {
+        ...prev.contactInfo,
+        socialLinks: prev.contactInfo.socialLinks.map(link =>
+          link.id === id ? { ...link, [field]: value } : link
+        )
+      }
+    }));
+  };
+
+  const removeSocialLink = (id: string) => {
+    setFormData(prev => ({
+      ...prev,
+      contactInfo: {
+        ...prev.contactInfo,
+        socialLinks: prev.contactInfo.socialLinks.filter(link => link.id !== id)
+      }
+    }));
+  };
+
   const handleAvailabilityToggle = (availability: string) => {
     setFormData(prev => ({
       ...prev,
@@ -205,7 +249,10 @@ const CreateProfile: React.FC<CreateProfileProps> = ({ onProfileComplete, existi
             linkedin: formData.contactInfo.social.linkedin || undefined,
             instagram: formData.contactInfo.social.instagram || undefined,
             whatsapp: formData.contactInfo.social.whatsapp || undefined
-          }
+          },
+          socialLinks: formData.contactInfo.socialLinks.filter(link => 
+            link.platform.trim() && link.url.trim()
+          )
         }
       };
 
@@ -524,54 +571,51 @@ const CreateProfile: React.FC<CreateProfileProps> = ({ onProfileComplete, existi
                 />
               </div>
 
-              {/* LinkedIn */}
+              {/* Dynamic Social Media Links */}
               <div className="form-group">
-                <label htmlFor="contactInfo.social.linkedin" className="form-label">
-                  LinkedIn
-                </label>
-                <input
-                  type="url"
-                  id="contactInfo.social.linkedin"
-                  name="contactInfo.social.linkedin"
-                  value={formData.contactInfo.social.linkedin}
-                  onChange={handleInputChange}
-                  className={`form-input ${errors.linkedin ? 'form-input--error' : ''}`}
-                  placeholder="https://linkedin.com/in/yourprofile"
-                />
-                {errors.linkedin && <p className="form-error">{errors.linkedin}</p>}
-              </div>
-
-              {/* Instagram */}
-              <div className="form-group">
-                <label htmlFor="contactInfo.social.instagram" className="form-label">
-                  Instagram
-                </label>
-                <input
-                  type="url"
-                  id="contactInfo.social.instagram"
-                  name="contactInfo.social.instagram"
-                  value={formData.contactInfo.social.instagram}
-                  onChange={handleInputChange}
-                  className={`form-input ${errors.instagram ? 'form-input--error' : ''}`}
-                  placeholder="https://instagram.com/yourusername"
-                />
-                {errors.instagram && <p className="form-error">{errors.instagram}</p>}
-              </div>
-
-              {/* WhatsApp */}
-              <div className="form-group">
-                <label htmlFor="contactInfo.social.whatsapp" className="form-label">
-                  WhatsApp
-                </label>
-                <input
-                  type="text"
-                  id="contactInfo.social.whatsapp"
-                  name="contactInfo.social.whatsapp"
-                  value={formData.contactInfo.social.whatsapp}
-                  onChange={handleInputChange}
-                  className="form-input"
-                  placeholder="Phone number or wa.me link"
-                />
+                <label className="form-label">Social Media Links</label>
+                <p className="form-help-text">Add any social media platforms you want to share</p>
+                
+                {formData.contactInfo.socialLinks.map((link, index) => (
+                  <div key={link.id} className="social-link-item">
+                    <div className="social-link-inputs">
+                      <div className="social-link-platform">
+                        <input
+                          type="text"
+                          placeholder="Platform (e.g., LinkedIn, Instagram, GitHub)"
+                          value={link.platform}
+                          onChange={(e) => updateSocialLink(link.id, 'platform', e.target.value)}
+                          className="form-input"
+                        />
+                      </div>
+                      <div className="social-link-url">
+                        <input
+                          type="text"
+                          placeholder="URL or username"
+                          value={link.url}
+                          onChange={(e) => updateSocialLink(link.id, 'url', e.target.value)}
+                          className="form-input"
+                        />
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => removeSocialLink(link.id)}
+                        className="btn btn--small btn--danger"
+                        title="Remove this social link"
+                      >
+                        ×
+                      </button>
+                    </div>
+                  </div>
+                ))}
+                
+                <button
+                  type="button"
+                  onClick={addSocialLink}
+                  className="btn btn--secondary btn--small"
+                >
+                  + Add Social Media Link
+                </button>
               </div>
             </div>
 

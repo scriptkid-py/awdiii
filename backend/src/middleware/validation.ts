@@ -55,7 +55,11 @@ export const validateCreateProfile: ValidationChain[] = [
   body('contactInfo.social.linkedin').optional().isString().withMessage('LinkedIn must be a string'),
   body('contactInfo.social.instagram').optional().isString().withMessage('Instagram must be a string'),
   body('contactInfo.social.twitter').optional().isString().withMessage('Twitter must be a string'),
-  body('contactInfo.social.whatsapp').optional().isString().withMessage('WhatsApp must be a string')
+  body('contactInfo.social.whatsapp').optional().isString().withMessage('WhatsApp must be a string'),
+  body('contactInfo.socialLinks').optional().isArray().withMessage('Social links must be an array'),
+  body('contactInfo.socialLinks.*.id').optional().isString().withMessage('Social link ID must be a string'),
+  body('contactInfo.socialLinks.*.platform').optional().isString().withMessage('Social link platform must be a string'),
+  body('contactInfo.socialLinks.*.url').optional().isString().withMessage('Social link URL must be a string')
 ];
 
 export const validateUpdateProfile: ValidationChain[] = [
@@ -116,7 +120,11 @@ export const validateUpdateProfile: ValidationChain[] = [
   body('contactInfo.social.linkedin').optional().isString().withMessage('LinkedIn must be a string'),
   body('contactInfo.social.instagram').optional().isString().withMessage('Instagram must be a string'),
   body('contactInfo.social.twitter').optional().isString().withMessage('Twitter must be a string'),
-  body('contactInfo.social.whatsapp').optional().isString().withMessage('WhatsApp must be a string')
+  body('contactInfo.social.whatsapp').optional().isString().withMessage('WhatsApp must be a string'),
+  body('contactInfo.socialLinks').optional().isArray().withMessage('Social links must be an array'),
+  body('contactInfo.socialLinks.*.id').optional().isString().withMessage('Social link ID must be a string'),
+  body('contactInfo.socialLinks.*.platform').optional().isString().withMessage('Social link platform must be a string'),
+  body('contactInfo.socialLinks.*.url').optional().isString().withMessage('Social link URL must be a string')
 ];
 
 // Skill Validation

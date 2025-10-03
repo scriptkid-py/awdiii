@@ -21,6 +21,11 @@ export interface UserProfile {
       instagram?: string;
       whatsapp?: string;
     };
+    socialLinks?: Array<{
+      id: string;
+      platform: string;
+      url: string;
+    }>;
   };
   createdAt: Date;
   updatedAt: Date;

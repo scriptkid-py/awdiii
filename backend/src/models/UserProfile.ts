@@ -21,11 +21,23 @@ export interface UserProfileDocument extends Document {
       github?: string;
       twitter?: string;
       instagram?: string;
-    }
+      whatsapp?: string;
+    };
+    socialLinks?: Array<{
+      id: string;
+      platform: string;
+      url: string;
+    }>;
   };
   createdAt: Date;
   updatedAt: Date;
 }
+
+const socialLinkSchema = new Schema({
+  id: { type: String, required: true },
+  platform: { type: String, required: true, trim: true },
+  url: { type: String, required: true, trim: true }
+}, { _id: false });
 
 const contactInfoSchema = new Schema({
   email: { type: String },
@@ -34,10 +46,10 @@ const contactInfoSchema = new Schema({
     linkedin: { type: String },
     github: { type: String },
     twitter: { type: String },
-    instagram: { type: String }
-    ,
+    instagram: { type: String },
     whatsapp: { type: String }
-  }
+  },
+  socialLinks: [socialLinkSchema]
 }, { _id: false });
 
 const userProfileSchema = new Schema<UserProfileDocument>({
