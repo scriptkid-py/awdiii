@@ -26,8 +26,6 @@ const AboutUs: React.FC = () => {
         .about-us__social-link:focus{border-color:rgba(139,92,246,.6)}
         .about-us__icon{width:20px;height:20px}
         .visually-hidden{position:absolute!important;height:1px;width:1px;overflow:hidden;clip:rect(1px,1px,1px,1px);white-space:nowrap;clip-path:inset(50%);border:0;padding:0;margin:-1px}
-        .about-us__read-more{background:none;border:none;color:var(--primary-color);font-weight:600;cursor:pointer;padding:0}
-        .about-us__read-more:focus{outline:2px solid rgba(79,70,229,.6);outline-offset:2px;border-radius:4px}
       `}</style>
 
       <div className="about-us__container">
@@ -39,22 +37,13 @@ const AboutUs: React.FC = () => {
           <article className="about-us__card" tabIndex={0}>
             <div className="about-us__image-wrap">
               {/* Swap with your image URL if needed */}
-              <img className="about-us__image" src="https://instagram.forn3-6.fna.fbcdn.net/v/t51.2885-19/515271679_18061236254225109_8250111147506031280_n.jpg?stp=dst-jpg_s320x320_tt6&efg=eyJ2ZW5jb2RlX3RhZyI6InByb2ZpbGVfcGljLmRqYW5nby4xMDgwLmMyIn0&_nc_ht=instagram.forn3-6.fna.fbcdn.net&_nc_cat=109&_nc_oc=Q6cZ2QFQhsTYuifTLfkalkDdBS_EnL9imflJvMz5g7pHHie67qSc9qh28vmAlaKQYeimrFw&_nc_ohc=QU-0hHBg0P0Q7kNvwFAfg9A&_nc_gid=RVE-Z-qQM7FzOBqiKVxeZg&edm=AOQ1c0wBAAAA&ccb=7-5&oh=00_Afcm1kRsZfH2ZO0FwWyoBwGh3tMmY_XKAGQQ7KaIn5iG2A&oe=68E5A89A&_nc_sid=8b3546" alt="Riyadh profile headshot" loading="lazy" />
+              <img className="about-us__image" src="https://lh3.googleusercontent.com/a/ACg8ocKi7kpqXGL99jYZUmCMZlRwqO01Im6Mw5ZhV9ipwN7mUT4y768=s200-c" alt="Riyadh profile headshot" loading="lazy" />
             </div>
             <div className="about-us__content">
               <h3 className="about-us__name">Riyadh</h3>
               <p className="about-us__role">Front-end Developer & Idea Owner (UK)</p>
-              <p className="about-us__bio" data-readmore>no need, I’m just better</p>
-              <button className="about-us__read-more" type="button" data-readmore-toggle aria-expanded="false">Read more</button>
+              <p className="about-us__bio">no need, I'm just better</p>
               <nav className="about-us__social" aria-label="Social links">
-                <a className="about-us__social-link" href="#" target="_blank" rel="noopener noreferrer" aria-label="Follow on Twitter">
-                  <span className="visually-hidden">Twitter</span>
-                  <svg className="about-us__icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M22 5.8c-.7.3-1.5.6-2.3.7.8-.5 1.4-1.2 1.7-2.1-.7.5-1.6.8-2.4 1C18 4.7 17 4.3 16 4.3c-2.1 0-3.8 1.8-3.8 4 0 .3 0 .6.1.9-3.1-.2-5.9-1.8-7.7-4.2-.3.6-.5 1.2-.5 1.9 0 1.3.6 2.4 1.5 3.2-.6 0-1.1-.2-1.6-.4v.1c0 1.9 1.3 3.5 3 3.9-.3.1-.7.2-1 .2-.2 0-.5 0-.7-.1.5 1.6 2 2.7 3.7 2.7-1.4 1.2-3.1 1.9-5 1.9-.3 0-.6 0-.8 0 1.8 1.2 3.9 1.9 6.1 1.9 7.3 0 11.3-6.4 11.3-12 0-.2 0-.3 0-.5.8-.6 1.4-1.3 2-2.1z"/></svg>
-                </a>
-                <a className="about-us__social-link" href="#" target="_blank" rel="noopener noreferrer" aria-label="Connect on LinkedIn">
-                  <span className="visually-hidden">LinkedIn</span>
-                  <svg className="about-us__icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M4.98 3.5C4.98 4.88 3.86 6 2.5 6S0 4.88 0 3.5 1.12 1 2.5 1s2.48 1.12 2.48 2.5zM.5 8h4V23h-4V8zm7.5 0h3.8v2.1h.1c.5-1 1.9-2.1 3.9-2.1 4.2 0 5 2.8 5 6.5V23h-4v-6.5c0-1.6 0-3.7-2.2-3.7s-2.5 1.7-2.5 3.6V23h-4V8z"/></svg>
-                </a>
                 <a className="about-us__social-link" href="https://instagram.com/r1y1d" target="_blank" rel="noopener noreferrer" aria-label="Follow on Instagram">
                   <span className="visually-hidden">Instagram</span>
                   <svg className="about-us__icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M7 2C4.2 2 2 4.2 2 7v10c0 2.8 2.2 5 5 5h10c2.8 0 5-2.2 5-5V7c0-2.8-2.2-5-5-5H7zm10 2c1.7 0 3 1.3 3 3v10c0 1.7-1.3 3-3 3H7c-1.7 0-3-1.3-3-3V7c0-1.7 1.3-3 3-3h10zm-5 3.5A5.5 5.5 0 1017.5 13 5.51 5.51 0 0012 7.5zm0 2A3.5 3.5 0 1115.5 13 3.5 3.5 0 0112 9.5zm5.8-3.5a1 1 0 10.2 2 1 1 0 00-.2-2z"/></svg>
@@ -76,36 +65,16 @@ const AboutUs: React.FC = () => {
             <div className="about-us__content">
               <h3 className="about-us__name">Zeyd</h3>
               <p className="about-us__role">Back-end Developer</p>
-              <p className="about-us__bio" data-readmore>who needs bio when I’m just up</p>
-              <button className="about-us__read-more" type="button" data-readmore-toggle aria-expanded="false">Read more</button>
+              <p className="about-us__bio">who needs bio when I'm just up</p>
               <nav className="about-us__social" aria-label="Social links">
-                <a className="about-us__social-link" href="#" target="_blank" rel="noopener noreferrer" aria-label="Follow on Twitter"><span className="visually-hidden">Twitter</span><svg className="about-us__icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M22 5.8c-.7.3-1.5.6-2.3.7.8-.5 1.4-1.2 1.7-2.1-.7.5-1.6.8-2.4 1C18 4.7 17 4.3 16 4.3c-2.1 0-3.8 1.8-3.8 4 0 .3 0 .6.1.9-3.1-.2-5.9-1.8-7.7-4.2-.3.6-.5 1.2-.5 1.9 0 1.3.6 2.4 1.5 3.2-.6 0-1.1-.2-1.6-.4v.1c0 1.9 1.3 3.5 3 3.9-.3.1-.7.2-1 .2-.2 0-.5 0-.7-.1.5 1.6 2 2.7 3.7 2.7-1.4 1.2-3.1 1.9-5 1.9-.3 0-.6 0-.8 0 1.8 1.2 3.9 1.9 6.1 1.9 7.3 0 11.3-6.4 11.3-12 0-.2 0-.3 0-.5.8-.6 1.4-1.3 2-2.1z"/></svg></a>
-                <a className="about-us__social-link" href="#" target="_blank" rel="noopener noreferrer" aria-label="Connect on LinkedIn"><span className="visually-hidden">LinkedIn</span><svg className="about-us__icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M4.98 3.5C4.98 4.88 3.86 6 2.5 6S0 4.88 0 3.5 1.12 1 2.5 1s2.48 1.12 2.48 2.5zM.5 8h4V23h-4V8zm7.5 0h3.8v2.1h.1c.5-1 1.9-2.1 3.9-2.1 4.2 0 5 2.8 5 6.5V23h-4v-6.5c0-1.6 0-3.7-2.2-3.7s-2.5 1.7-2.5 3.6V23h-4V8z"/></svg></a>
-                <a className="about-us__social-link" href="#" target="_blank" rel="noopener noreferrer" aria-label="Follow on Instagram"><span className="visually-hidden">Instagram</span><svg className="about-us__icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M7 2C4.2 2 2 4.2 2 7v10c0 2.8 2.2 5 5 5h10c2.8 0 5-2.2 5-5V7c0-2.8-2.2-5-5-5H7zm10 2c1.7 0 3 1.3 3 3v10c0 1.7-1.3 3-3 3H7c-1.7 0-3-1.3-3-3V7c0-1.7 1.3-3 3-3h10zm-5 3.5A5.5 5.5 0 1017.5 13 5.51 5.51 0 0012 7.5zm0 2A3.5 3.5 0 1115.5 13 3.5 3.5 0 0112 9.5zm5.8-3.5a1 1 0 10.2 2 1 1 0 00-.2-2z"/></svg></a>
-                <a className="about-us__social-link" href="mailto:ammizaidghost@gmail.com" aria-label="Email Zeyd"><span className="visually-hidden">Email</span><svg className="about-us__icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M20 4H4a2 2 0 00-2 2v12a2 2 0 002 2h16a2 2 0 002-2V6a2 2 0 00-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg></a>
+                <a className="about-us__social-link" href="mailto:ammizaidghost@gmail.com" aria-label="Email Zeyd">
+                  <span className="visually-hidden">Email</span>
+                  <svg className="about-us__icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M20 4H4a2 2 0 00-2 2v12a2 2 0 002 2h16a2 2 0 002-2V6a2 2 0 00-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+                </a>
               </nav>
             </div>
           </article>
         </div>
-
-        {/* Optional: small JS to toggle Read more */}
-        <script dangerouslySetInnerHTML={{__html: `
-          document.querySelectorAll('[data-readmore-toggle]').forEach(btn => {
-            btn.addEventListener('click', () => {
-              const card = btn.closest('.about-us__card');
-              const bio = card && card.querySelector('[data-readmore]');
-              if (!bio) return;
-              const expanded = btn.getAttribute('aria-expanded') === 'true';
-              btn.setAttribute('aria-expanded', String(!expanded));
-              if (expanded) {
-                bio.style.display='-webkit-box'; bio.style.webkitLineClamp='2'; bio.style.webkitBoxOrient='vertical'; bio.style.overflow='hidden'; btn.textContent='Read more';
-              } else {
-                bio.style.display='block'; bio.style.webkitLineClamp='unset'; bio.style.webkitBoxOrient='unset'; bio.style.overflow='visible'; btn.textContent='Show less';
-              }
-            });
-          });
-          document.querySelectorAll('[data-readmore]').forEach(bio => { bio.style.display='-webkit-box'; bio.style.webkitLineClamp='2'; bio.style.webkitBoxOrient='vertical'; bio.style.overflow='hidden'; });
-        `}} />
       </div>
     </section>
   );
