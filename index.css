@@ -448,16 +448,19 @@ main {
 }
 
 .user-info__logout {
-  background: none;
+  background: #ef4444;
   border: none;
-  color: var(--text-secondary-color);
+  color: white;
   cursor: pointer;
   font-weight: 500;
   font-size: 0.9rem;
-  padding: 0.25rem;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  transition: background-color 0.2s ease;
 }
 .user-info__logout:hover {
-  color: var(--primary-color);
+  background: #dc2626;
+  color: white;
 }
 
 /* Profile Manager Styles */

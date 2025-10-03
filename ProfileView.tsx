@@ -52,7 +52,8 @@ const ProfileView: React.FC<ProfileViewProps> = ({
       }
     } catch (error) {
       console.error('Error deleting profile:', error);
-      alert('Failed to delete profile. Please try again.');
+      const message = error instanceof Error ? error.message : 'Failed to delete profile. Please try again.';
+      alert(message);
     } finally {
       setIsDeleting(false);
     }

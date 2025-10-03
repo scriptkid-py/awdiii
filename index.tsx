@@ -46,14 +46,6 @@ const Navigation: React.FC<{ userProfile: UserProfile | null }> = () => {
             >
               Add Your Profile
             </button>
-            <div className="user-info">
-              <img 
-                src={getProfilePictureUrl(user.photoURL || undefined, user.email || undefined, 32)}
-                alt={user.displayName || 'User'}
-                className="user-avatar"
-              />
-              <span className="user-name">{user.displayName || 'User'}</span>
-            </div>
           </>
         )}
         <Login />
