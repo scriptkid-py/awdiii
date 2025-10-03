@@ -28,6 +28,9 @@ export default defineConfig(({ mode }) => {
             manualChunks: undefined,
           },
         },
+        // Copy _redirects file to dist for Netlify
+        copyPublicDir: true,
       },
+      publicDir: 'public',
     };
 });

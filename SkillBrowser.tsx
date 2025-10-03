@@ -23,7 +23,18 @@ const SkillBrowser: React.FC<SkillBrowserProps> = ({ onProfileClick }) => {
       try {
         setLoading(true);
         const profilesData = await searchProfiles(filters);
-        setProfiles(profilesData);
+        
+        // Sort profiles so the logged-in user's profile appears first
+        if (user) {
+          const sortedProfiles = profilesData.sort((a, b) => {
+            if (a.uid === user.uid) return -1; // User's profile first
+            if (b.uid === user.uid) return 1;  // User's profile first
+            return 0; // Keep original order for others
+          });
+          setProfiles(sortedProfiles);
+        } else {
+          setProfiles(profilesData);
+        }
       } catch (error) {
         console.error('Error loading data:', error);
       } finally {
@@ -32,7 +43,7 @@ const SkillBrowser: React.FC<SkillBrowserProps> = ({ onProfileClick }) => {
     };
 
     loadData();
-  }, [filters]);
+  }, [filters, user]);
 
   const handleFilterChange = (filterType: keyof SearchFilters, value: string) => {
     setFilters(prev => {
