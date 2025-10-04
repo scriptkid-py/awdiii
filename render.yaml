@@ -23,22 +23,19 @@ services:
       - key: FRONTEND_URL
         value: https://awdiii-1.onrender.com
 
-  # Frontend Web Service with SPA routing
-  - type: web
+  # Frontend Static Site with SPA routing
+  - type: static
     name: awdiii-1
-    env: node
     plan: free
-    buildCommand: |
-      npm install
-      npm run build
-      echo "Build complete, checking files..."
-      ls -la
-      echo "Checking dist folder..."
-      ls -la dist || echo "dist folder not found!"
-    startCommand: npm start
-    healthCheckPath: /health
+    buildCommand: npm install && npm run build
+    staticPublishPath: ./dist
+    pullRequestPreviewsEnabled: true
     envVars:
       - key: VITE_API_BASE_URL
         value: https://awdiii.onrender.com/api
-      - key: NODE_ENV
-        value: production
+
+# Rewrite rules for SPA routing
+redirects:
+  - type: rewrite
+    source: /*
+    destination: /index.html
