@@ -6,23 +6,29 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
-
-// Serve static files from the dist directory
 const distPath = path.join(__dirname, 'dist');
-app.use(express.static(distPath));
 
-// Handle all routes by serving index.html (SPA fallback)
-app.get('*', (req, res) => {
-  res.sendFile(path.join(distPath, 'index.html'), (err) => {
-    if (err) {
-      console.error('Error serving index.html:', err);
-      res.status(500).send('Internal Server Error');
+// Serve static files with proper configuration
+app.use(express.static(distPath, {
+  maxAge: '1d',
+  etag: true,
+  lastModified: true,
+  setHeaders: (res, filePath) => {
+    if (filePath.endsWith('.html')) {
+      res.setHeader('Cache-Control', 'no-cache');
     }
-  });
+  }
+}));
+
+// SPA fallback - serve index.html for all routes that don't match static files
+app.get('*', (req, res) => {
+  const indexPath = path.join(distPath, 'index.html');
+  console.log(`📄 Serving index.html for route: ${req.url}`);
+  res.sendFile(indexPath);
 });
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`✅ Server is running on port ${PORT}`);
-  console.log(`📁 Serving files from: ${distPath}`);
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`✅ Server running on http://0.0.0.0:${PORT}`);
+  console.log(`📁 Serving from: ${distPath}`);
 });
