@@ -7,25 +7,24 @@ const __dirname = path.dirname(__filename);
 
 const app = express();
 
-// Serve static files from the dist directory with fallback
-app.use(express.static(path.join(__dirname, 'dist'), {
-  index: false // Don't serve index.html automatically
-}));
+// Serve static files from the dist directory
+app.use(express.static(path.join(__dirname, 'dist')));
 
-// Handle SPA routing - send index.html for all routes
-app.get('*', (req, res, next) => {
-  // If the request is for a static file that doesn't exist, serve index.html
-  const indexPath = path.join(__dirname, 'dist', 'index.html');
-  res.sendFile(indexPath, (err) => {
-    if (err) {
-      console.error('Error sending index.html:', err);
-      res.status(500).send('Error loading application');
-    }
-  });
+// Handle SPA routing - redirect all non-static routes to home
+app.get('*', (req, res) => {
+  // Check if the request is for a static file (has extension)
+  const hasExtension = path.extname(req.path) !== '';
+  
+  if (hasExtension) {
+    // If it's a static file request, send 404
+    res.status(404).send('File not found');
+  } else {
+    // For all other routes (like /about, /profile/*, etc.), redirect to home
+    res.redirect('/');
+  }
 });
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
-  console.log(`Serving files from: ${path.join(__dirname, 'dist')}`);
 });
