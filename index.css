@@ -463,6 +463,32 @@ main {
   color: white;
 }
 
+/* Header User Info */
+.header__user-info {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-left: 1rem;
+  padding: 0.4rem 0.8rem;
+  background-color: #f8fafc;
+  border-radius: 2rem;
+  border: 1px solid #e2e8f0;
+}
+
+.header__user-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #e2e8f0;
+}
+
+.header__user-name {
+  font-weight: 600;
+  color: var(--text-primary-color);
+  font-size: 0.95rem;
+}
+
 /* Profile Manager Styles */
 .profile-manager {
   min-height: 100vh;

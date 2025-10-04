@@ -46,6 +46,15 @@ const Navigation: React.FC<{ userProfile: UserProfile | null }> = () => {
             >
               Add Your Profile
             </button>
+            {/* User profile info in header */}
+            <div className="header__user-info">
+              <img 
+                src={user.photoURL || 'https://via.placeholder.com/40'} 
+                alt={user.displayName || 'User'} 
+                className="header__user-avatar"
+              />
+              <span className="header__user-name">{user.displayName || 'User'}</span>
+            </div>
           </>
         )}
         <Login />
