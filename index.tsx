@@ -273,14 +273,7 @@ const AppWithInitialization: React.FC = () => {
   }, []);
 
   if (!isInitialized) {
-    return (
-      <div className="app-container">
-        <div style={{ textAlign: 'center', padding: '2rem' }}>
-          <h2>Initializing SkillShare...</h2>
-          <p>Status: {initStatus}</p>
-        </div>
-      </div>
-    );
+    return <LoadingPage />;
   }
 
   return <App />;
