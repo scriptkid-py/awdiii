@@ -20,17 +20,9 @@ const Login: React.FC = () => {
   }
 
   if (user) {
-    // User is logged in — show user info with name, picture, and logout button
+    // User is logged in — show only logout button
     return (
-      <div className="user-info">
-        <img 
-          src={user.photoURL || 'https://via.placeholder.com/40'} 
-          alt={user.displayName || 'User'} 
-          className="user-info__avatar"
-        />
-        <span className="user-info__name">{user.displayName || 'User'}</span>
-        <button onClick={handleLogout} className="user-info__logout">Logout</button>
-      </div>
+      <button onClick={handleLogout} className="user-info__logout">Logout</button>
     );
   }
 
