@@ -8,6 +8,7 @@ import CreateProfile from './CreateProfile';
 import SkillBrowser from './SkillBrowser';
 import ProfileView from './ProfileView';
 import AboutUs from './AboutUs';
+import LoadingPage from './LoadingPage';
 import { UserProfile } from './types';
 import { getUserProfile, getProfileById, initializeDefaultData, connectToDatabase } from './database-api';
 import { getProfilePictureUrl } from './utils';
@@ -116,7 +117,7 @@ const ProfilePage: React.FC = () => {
   }, [profileId]);
 
   if (loading) {
-    return <div style={{ textAlign: 'center', padding: '2rem' }}>Loading profile...</div>;
+    return <LoadingPage />;
   }
 
   if (!profile) {
@@ -179,7 +180,7 @@ const AddProfilePage: React.FC = () => {
   }
 
   if (loading) {
-    return <div style={{ textAlign: 'center', padding: '2rem' }}>Loading...</div>;
+    return <LoadingPage />;
   }
 
   return (
@@ -214,13 +215,7 @@ const App: React.FC = () => {
   }, [user]);
 
   if (loading) {
-    return (
-      <div className="app-container">
-        <div style={{ textAlign: 'center', padding: '2rem' }}>
-          <h2>Loading...</h2>
-        </div>
-      </div>
-    );
+    return <LoadingPage />;
   }
 
   return (
