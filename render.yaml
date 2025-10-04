@@ -34,8 +34,9 @@ services:
       - key: VITE_API_BASE_URL
         value: https://awdiii.onrender.com/api
 
-# Rewrite rules for SPA routing
+# Redirect all non-home routes to home page on refresh
 redirects:
-  - type: rewrite
+  - type: redirect
     source: /*
-    destination: /index.html
+    destination: /
+    status: 302
