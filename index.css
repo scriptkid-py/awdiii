@@ -1290,9 +1290,10 @@ main {
 
 .profiles-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
   gap: 2rem;
   max-width: 1200px;
+  justify-items: center;
 }
 
 .profile-card {
@@ -1367,8 +1368,249 @@ main {
   background-color: #06b6d4;
 }
 
+/* Modern Profile Card Styles - From Uiverse.io by Tiagoadag */
+.modern-profile-card {
+  width: 190px;
+  height: 254px;
+  background-image: linear-gradient(163deg, #00ff75 0%, #3700ff 100%);
+  border-radius: 20px;
+  transition: all .3s;
+  position: relative;
+  cursor: pointer;
+}
+
+.modern-profile-card-inner {
+  width: 190px;
+  height: 254px;
+  background-color: #1a1a1a;
+  border-radius: 20px;
+  transition: all .2s;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  position: relative;
+  z-index: 1;
+}
+
+.modern-profile-card-inner:hover {
+  transform: scale(0.98);
+}
+
+.modern-profile-card:hover {
+  box-shadow: 0px 0px 30px 1px rgba(0, 255, 117, 0.30);
+}
+
+.modern-profile-card .avatar-image {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #00ff75;
+  margin-bottom: 1rem;
+}
+
+.modern-profile-card .profile-name {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #ffffff;
+  margin: 0 0 0.5rem 0;
+}
+
+.modern-profile-card .profile-field {
+  font-size: 0.8rem;
+  color: #a0a0a0;
+  margin: 0 0 1rem 0;
+}
+
+.modern-profile-card .profile-skills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+  justify-content: center;
+}
+
+.modern-profile-card .skill-badge {
+  background-color: #00ff75;
+  color: #1a1a1a;
+  padding: 0.2rem 0.5rem;
+  border-radius: 0.5rem;
+  font-size: 0.7rem;
+  font-weight: 500;
+}
+
+/* Cyberpunk Checkbox Styles - From Uiverse.io by adamgiebl */
+.cyberpunk-checkbox {
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border: 2px solid #30cfd0;
+  border-radius: 5px;
+  background-color: transparent;
+  display: inline-block;
+  position: relative;
+  margin-right: 10px;
+  cursor: pointer;
+}
+
+.cyberpunk-checkbox:before {
+  content: "";
+  background-color: #30cfd0;
+  display: block;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  width: 10px;
+  height: 10px;
+  border-radius: 3px;
+  transition: all 0.3s ease-in-out;
+}
+
+.cyberpunk-checkbox:checked:before {
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.cyberpunk-checkbox-label {
+  font-size: 18px;
+  color: #fff;
+  cursor: pointer;
+  user-select: none;
+  display: flex;
+  align-items: center;
+}
+
+/* Override existing checkbox styles to use cyberpunk style */
+.browse-page__filter-group input[type="checkbox"],
+.skill-checkbox input[type="checkbox"],
+.availability-checkbox input[type="checkbox"],
+.filter-checkbox input[type="checkbox"],
+.interest-checkbox input[type="checkbox"] {
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border: 2px solid #30cfd0;
+  border-radius: 5px;
+  background-color: transparent;
+  display: inline-block;
+  position: relative;
+  margin-right: 10px;
+  cursor: pointer;
+}
+
+.browse-page__filter-group input[type="checkbox"]:before,
+.skill-checkbox input[type="checkbox"]:before,
+.availability-checkbox input[type="checkbox"]:before,
+.filter-checkbox input[type="checkbox"]:before,
+.interest-checkbox input[type="checkbox"]:before {
+  content: "";
+  background-color: #30cfd0;
+  display: block;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  width: 10px;
+  height: 10px;
+  border-radius: 3px;
+  transition: all 0.3s ease-in-out;
+}
+
+.browse-page__filter-group input[type="checkbox"]:checked:before,
+.skill-checkbox input[type="checkbox"]:checked:before,
+.availability-checkbox input[type="checkbox"]:checked:before,
+.filter-checkbox input[type="checkbox"]:checked:before,
+.interest-checkbox input[type="checkbox"]:checked:before {
+  transform: translate(-50%, -50%) scale(1);
+}
+
+/* Update label colors for better contrast */
+.browse-page__filter-group label,
+.skill-checkbox label,
+.availability-checkbox label,
+.filter-checkbox label,
+.interest-checkbox label {
+  color: #1e293b;
+  font-size: 16px;
+}
+
 .skill-badge:nth-child(4) {
   background-color: #10b981;
+}
+
+/* Responsive design for modern profile cards */
+@media (max-width: 768px) {
+  .profiles-grid {
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 1.5rem;
+  }
+  
+  .modern-profile-card {
+    width: 160px;
+    height: 220px;
+  }
+  
+  .modern-profile-card-inner {
+    width: 160px;
+    height: 220px;
+    padding: 1rem;
+  }
+  
+  .modern-profile-card .avatar-image {
+    width: 50px;
+    height: 50px;
+  }
+  
+  .modern-profile-card .profile-name {
+    font-size: 0.9rem;
+  }
+  
+  .modern-profile-card .profile-field {
+    font-size: 0.75rem;
+  }
+  
+  .modern-profile-card .skill-badge {
+    font-size: 0.65rem;
+    padding: 0.15rem 0.4rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .profiles-grid {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 1rem;
+  }
+  
+  .modern-profile-card {
+    width: 140px;
+    height: 200px;
+  }
+  
+  .modern-profile-card-inner {
+    width: 140px;
+    height: 200px;
+    padding: 0.8rem;
+  }
+  
+  .modern-profile-card .avatar-image {
+    width: 45px;
+    height: 45px;
+  }
+  
+  .modern-profile-card .profile-name {
+    font-size: 0.85rem;
+  }
+  
+  .modern-profile-card .profile-field {
+    font-size: 0.7rem;
+  }
+  
+  .modern-profile-card .skill-badge {
+    font-size: 0.6rem;
+    padding: 0.1rem 0.3rem;
+  }
 }
 
 .no-results {

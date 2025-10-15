@@ -140,27 +140,29 @@ const SkillBrowser: React.FC<SkillBrowserProps> = ({ onProfileClick }) => {
               {profiles.map(profile => (
                 <div 
                   key={profile.id} 
-                  className="profile-card"
+                  className="modern-profile-card"
                   onClick={() => onProfileClick(profile)}
                 >
-                  <div className="profile-avatar">
-                    <img 
-                      src={getProfilePictureUrl(
-                        // Use Firebase user's photo if this is the current user's profile
-                        profile.uid === user?.uid ? (user.photoURL || undefined) : profile.photoURL, 
-                        profile.email, 
-                        120
-                      )} 
-                      alt={profile.displayName}
-                      className="avatar-image"
-                    />
-                  </div>
-                  <h3 className="profile-name">{profile.displayName}</h3>
-                  <p className="profile-field">{profile.university || 'University'}</p>
-                  <div className="profile-skills">
-                    {profile.skills.slice(0, 4).map(skill => (
-                      <span key={skill} className="skill-badge">{skill}</span>
-                    ))}
+                  <div className="modern-profile-card-inner">
+                    <div className="profile-avatar">
+                      <img 
+                        src={getProfilePictureUrl(
+                          // Use Firebase user's photo if this is the current user's profile
+                          profile.uid === user?.uid ? (user.photoURL || undefined) : profile.photoURL, 
+                          profile.email, 
+                          120
+                        )} 
+                        alt={profile.displayName}
+                        className="avatar-image"
+                      />
+                    </div>
+                    <h3 className="profile-name">{profile.displayName}</h3>
+                    <p className="profile-field">{profile.university || 'University'}</p>
+                    <div className="profile-skills">
+                      {profile.skills.slice(0, 4).map(skill => (
+                        <span key={skill} className="skill-badge">{skill}</span>
+                      ))}
+                    </div>
                   </div>
                 </div>
               ))}
