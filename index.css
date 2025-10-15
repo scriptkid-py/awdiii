@@ -1399,13 +1399,13 @@ main {
   z-index: 1;
 }
 
-.modern-profile-card:hover {
-  box-shadow: 0px 0px 30px 1px rgba(0, 255, 117, 0.30);
+.modern-profile-card-inner:hover {
   transform: scale(0.98);
+  border-radius: 20px;
 }
 
-.modern-profile-card-inner:hover {
-  border-radius: 20px;
+.modern-profile-card:hover {
+  box-shadow: 0px 0px 30px 1px rgba(0, 255, 117, 0.30);
 }
 
 .modern-profile-card .profile-avatar {
