@@ -1383,6 +1383,23 @@ main {
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
 }
 
+.modern-profile-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 280px;
+  height: 350px;
+  background: transparent;
+  border-radius: 20px;
+  box-shadow: 0 0 0 0 rgba(0, 255, 117, 0);
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  z-index: -1;
+  pointer-events: none;
+}
+
 .modern-profile-card-inner {
   width: 280px;
   height: 350px;
@@ -1404,10 +1421,11 @@ main {
   border-radius: 20px;
 }
 
-.modern-profile-card:hover {
+.modern-profile-card:hover::before {
   box-shadow: 
-    0px 0px 0px 4px rgba(0, 255, 117, 0.8),
-    0px 0px 40px 0px rgba(0, 255, 117, 0.4);
+    0 0 0 3px rgba(0, 255, 117, 0.8),
+    0 0 30px rgba(0, 255, 117, 0.6),
+    0 0 60px rgba(0, 255, 117, 0.3);
 }
 
 .modern-profile-card .profile-avatar {
@@ -1636,6 +1654,11 @@ main {
     margin: 1rem;
   }
   
+  .modern-profile-card::before {
+    width: 240px;
+    height: 300px;
+  }
+  
   .modern-profile-card-inner {
     width: 240px;
     height: 300px;
@@ -1673,6 +1696,11 @@ main {
     width: 220px;
     height: 280px;
     margin: 0.5rem auto;
+  }
+  
+  .modern-profile-card::before {
+    width: 220px;
+    height: 280px;
   }
   
   .modern-profile-card-inner {
