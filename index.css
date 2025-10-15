@@ -1386,12 +1386,12 @@ main {
 .modern-profile-card::before {
   content: '';
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  width: 280px;
-  height: 350px;
+  top: -20px;
+  left: -20px;
+  right: -20px;
+  bottom: -20px;
+  width: 320px;
+  height: 390px;
   background: transparent;
   border-radius: 20px;
   box-shadow: 0 0 0 0 rgba(0, 255, 117, 0);
@@ -1656,8 +1656,12 @@ main {
   }
   
   .modern-profile-card::before {
-    width: 240px;
-    height: 300px;
+    top: -15px;
+    left: -15px;
+    right: -15px;
+    bottom: -15px;
+    width: 270px;
+    height: 330px;
   }
   
   .modern-profile-card-inner {
@@ -1700,8 +1704,12 @@ main {
   }
   
   .modern-profile-card::before {
-    width: 220px;
-    height: 280px;
+    top: -10px;
+    left: -10px;
+    right: -10px;
+    bottom: -10px;
+    width: 240px;
+    height: 300px;
   }
   
   .modern-profile-card-inner {
