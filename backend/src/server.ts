@@ -26,6 +26,8 @@ app.use(helmet({
 // CORS configuration
 const corsOrigins: (string | RegExp)[] = [
   // Production domains - HTTPS only for security
+  'https://shareskill.site',        // Custom domain without www
+  'https://www.shareskill.site',    // Custom domain with www
   /^https:\/\/.*\.onrender\.com$/,  // Render.com subdomains (HTTPS only)
   /^https:\/\/.*\.netlify\.app$/,   // Netlify subdomains (HTTPS only)
 ];
@@ -34,9 +36,10 @@ const corsOrigins: (string | RegExp)[] = [
 // WARNING: HTTP is only allowed in development for local testing
 if (process.env.NODE_ENV !== 'production') {
   corsOrigins.push(
-    FRONTEND_URL,  // Usually http://localhost:5173 in dev
-    'http://localhost:3000',
-    'http://localhost:5173'
+    'http://localhost:5173',        // Vite default port
+    'http://localhost:3000',        // Alternative frontend port
+    'http://localhost:3001',        // Alternative frontend port
+    FRONTEND_URL                    // Environment variable
   );
 }
 

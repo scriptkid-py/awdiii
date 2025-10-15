@@ -21,7 +21,7 @@ services:
       - key: FIREBASE_PROJECT_ID
         value: knoweachother-ba559
       - key: FRONTEND_URL
-        value: https://awdiii-1.onrender.com
+        value: https://shareskill.site
 
   # Frontend Static Site with SPA routing
   - type: static
